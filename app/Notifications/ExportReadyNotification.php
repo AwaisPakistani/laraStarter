@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -32,13 +31,12 @@ class ExportReadyNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
             ->subject('Your Sales Export is Ready!')
             ->greeting('Hello!')
-            ->line('Your sales export spreadsheet has been successfully generated.')
+            ->line("Your export file ({$this->fileName}) has been successfully generated.")
             ->action('Download Sales Excel', $this->downloadUrl)
             ->line('Thank you for using our application!');
     }
@@ -51,7 +49,8 @@ class ExportReadyNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'file_name' => $this->fileName,
+            'download_url' => $this->downloadUrl,
         ];
     }
 }

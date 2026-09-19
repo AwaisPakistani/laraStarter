@@ -17,16 +17,16 @@ use App\Models\User;
 class ExportExcelJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     public int $timeout = 1800; // 30 minutes
 
     public int $tries = 1;
-
 
     public function __construct(
         public string $fileName,
         public User $user
     ) {
+        $this->user = $user;
+        $this->filename = $fileName;
         $this->onQueue('exports');
     }
 

@@ -1,11 +1,9 @@
-<?php
-
+<?php 
 namespace App\Listeners;
 
 use App\Events\ExportCompleted;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use App\Notifications\ExportReadyNotification;
+
 class SendExportCompletedEmail
 {
     /**
@@ -21,9 +19,12 @@ class SendExportCompletedEmail
      */
     public function handle(ExportCompleted $event): void
     {
+        // Pass $filePath (or extract the file name if needed) and downloadUrl
+        $fileName = basename($event->filePath);
+
         $event->user->notify(new ExportReadyNotification(
-            $event->fileName,
-            $event->downloadUrl
+            fileName: $fileName,
+            downloadUrl: $event->downloadUrl
         ));
     }
 }
