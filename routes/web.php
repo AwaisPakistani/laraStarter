@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
         return Storage::disk('public')->download($path);
     })->name('sales.download');
     ////////////////
+    /////////ADMIN///////////
+    Route::resource('users', UserController::class);
 });
 
 require __DIR__.'/auth.php';
