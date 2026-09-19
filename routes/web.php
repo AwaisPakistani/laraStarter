@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Storage;
-
+use App\Http\Controllers\admin\UserController;
 Route::get('/', function () {
     return view('welcome');
 });

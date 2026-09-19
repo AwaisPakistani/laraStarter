@@ -57,7 +57,7 @@
                                     <li>
                                         <h6 class="dropdown-header">Hello, {{ auth()->user()->name }}!</h6>
                                     </li>
-                                    <li><a class="dropdown-item" href="{{ route('admin.my-profile',auth()->user()->id) }}"><i class="icon-mid bi bi-person me-2"></i> My
+                                    <li><a class="dropdown-item" href="{{ route('profile.edit') }}"><i class="icon-mid bi bi-person me-2"></i> My
                                             Profile</a></li>
                                     <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>
                                             Settings</a></li>
@@ -67,9 +67,9 @@
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <form method="POST" action="{{ route('admin.logout') }}">
+                                        <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <a class="dropdown-item" href="{{ route('admin.logout')}}" onclick="event.preventDefault();
+                                        <a class="dropdown-item" href="{{ route('logout')}}" onclick="event.preventDefault();
                                                 this.closest('form').submit();"><i
                                                 class="icon-mid bi bi-box-arrow-left me-2"></i>
 

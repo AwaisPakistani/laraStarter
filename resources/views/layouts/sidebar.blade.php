@@ -15,7 +15,7 @@
                         <li class="sidebar-title">Menu</li>
 
                         <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} ">
-                            <a href="{{ route('admin.dashboard') }}" class='sidebar-link'>
+                            <a href="{{ route('dashboard') }}" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Dashboard</span>
                             </a>
@@ -28,40 +28,10 @@
                             </a>
                             <ul class="submenu active">
                                 <li class="submenu-item ">
-                                    <a href="{{ route('admin.sales.index')}}">Sales</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="{{ route('admin.sales.import')}}">Upload Sales in Excel</a>
+                                    <a href="{{ route('users.index')}}">Users</a>
                                 </li>
                             </ul>
                         </li>
-                         <li class="sidebar-item {{ request()->routeIs(
-                            'admin.users.*',
-                            'admin.roles.*',
-                            'admin.permissions.*',
-                            'admin.modules.*'
-
-                         ) ? 'active' : '' }} has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-gear-fill"></i>
-                                <span>Settings</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="{{ route('admin.users.index') }}">Users</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="{{ route('admin.roles.index') }}">Roles</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="{{ route('admin.permissions.index') }}">Permissions</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="{{ route('admin.modules.index') }}">Modules</a>
-                                </li>
-                            </ul>
-                        </li>
-
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>

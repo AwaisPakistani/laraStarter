@@ -3,8 +3,6 @@
 <!--style-->
 @section('style')
 <link rel="stylesheet" href="{{asset('assets/vendors/iconly/bold.css')}}">
-<link rel="stylesheet" href="{{asset('assets/vendors/choices.js/choices.min.css')}}" />
-
 @stop
 <!--/style-->
 <div class="page-heading">
@@ -33,31 +31,11 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('admin.users.store') }}" method="POST" class="form">@csrf
+                            <form action="{{ route('admin.{{modelName}}s.store') }}" method="POST" class="form">@csrf
                                 <div class="row">
-                                     <div class="col-md-6 mb-4">
-                                        <div class="form-group">
-                                             <label for="USER-name-column">Roles</label>
-                                            <select class="choices form-select multiple-remove @error('roles')
-                                            is-invalid
-                                            @enderror" name="roles[]" multiple="multiple">
-                                                <optgroup label="Select Roles">
-                                                    @foreach ($roles as $role)
-                                                    <option value="{{ $role->id }}">{{$role->name}}</option>
-                                                    @endforeach
-                                                    </optgroup>
-                                                </optgroup>
-                                            </select>
-                                            @error('roles')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <label for="USER-name-column">User Name</label>
+                                            <label for="title-column"> Name</label>
                                             <input type="text" id="user-name-column" value="{{ old('name') }}" class="form-control @error('name')
                                             is-invalid
                                             @enderror"
@@ -84,34 +62,6 @@
 
                                         </div>
                                     </div>
-                                     <div class="col-md-6 col-12">
-                                        <div class="form-group">
-                                            <label for="password-id-column">Password</label>
-                                            <input type="password" value="{{ old('password') }}" id="password-id-column" class="form-control @error('password')
-                                            is-invalid
-                                            @enderror"
-                                            name="password" placeholder="password">
-                                            @error('password')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group">
-                                            <label for="password-id-column">Confirm Password</label>
-                                            <input type="password" value="{{ old('confirm-password') }}"id="confirm-password-id-column" class="form-control @error('confirm-password')
-                                            is-invalid
-                                            @enderror"
-                                            name="confirm-password" placeholder="Confirm-password">
-                                            @error('confirm-password')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
                                     <div class="col-12 d-flex justify-content-end">
                                         <button type="submit"
                                         class="btn btn-primary me-1 mb-1">Submit</button>
@@ -129,6 +79,6 @@
     <!-- // Basic multiple Column Form section end -->
 </div>
 @section('scripts')
-<script src="{{asset('assets/vendors/choices.js/choices.min.js')}}"></script>
+
 @stop
 @endsection
