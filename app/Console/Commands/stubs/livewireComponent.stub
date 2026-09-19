@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Livewire;
+
+use Livewire\Component;
+use Illuminate\Http\Request;
+use Livewire\WithPagination;
+use App\Repositories\Interfaces\{{ModelName}}RepositoryInterface;
+
+class {{ModelName}}s extends Component
+{
+    use WithPagination;
+    // public $title, $content, ${{ModelName}}_id;
+    public $isOpen = false;
+
+    protected ${{ModelName}}Repository;
+
+    public function mount({{ModelName}}RepositoryInterface ${{ModelName}}Repository)
+    {
+        $this->{{ModelName}}Repository = ${{ModelName}}Repository;
+    }
+
+    public function render()
+    {
+        if (!$this->{{ModelName}}Repository) {
+            $this->{{ModelName}}Repository = app({{ModelName}}RepositoryInterface::class);
+        }
+
+        // ✅ Don't assign to $this->posts
+        ${{ModelName}}s = $this->{{ModelName}}Repository->all(2);
+
+        return view('livewire.{{ModelName}}s', [
+            '{{ModelName}}s' => ${{ModelName}}s,
+        ]);
+    }
+
+    public function create()
+    {
+        $this->resetInputFields();
+        // dd('kksldf');ljkll
+        $this->openModal();
+    }
+
+    public function openModal()
+    {
+        $this->isOpen = true;
+    }
+
+    public function closeModal()
+    {
+        $this->isOpen = false;
+    }
+
+    private function resetInputFields()
+    {
+        $this->title = '';
+        $this->{{ModelName}}_id = '';
+    }
+
+    public function store()
+    {
+        ${{ModelName}}Repository = app({{ModelName}}RepositoryInterface::class);
+
+        // dd('store');
+        $this->validate([
+            'title' => 'required',
+        ]);
+
+        $data = [
+            'title' => $this->title,
+        ];
+
+        if($this->{{ModelName}}_id) {
+            ${{ModelName}}Repository->update{{ModelName}}($this->post_id, $data);
+            // Post::whereId($this->{{ModelName}}_id)->update($data);
+            session()->flash('message', '{{ModelName}} Updated Successfully.');
+        } else {
+            // Post::create($data);
+            ${{ModelName}}Repository->create{{ModelName}}($data);
+            session()->flash('message', '{{ModelName}} Created Successfully.');
+        }
+
+        $this->closeModal();
+        $this->resetInputFields();
+    }
+
+    public function edit($id)
+    {
+        $postRepository = app(PostRepositoryInterface::class);
+        // dd('edit');
+        $post = $postRepository->getPostById($id);
+        // $post = Post::whereId($id)->first();
+        $this->post_id = $id;
+        $this->title = $post->title;
+        $this->content = $post->content;
+
+        // $this->resetInputFields();
+        $this->openModal();
+    }
+
+    public function delete($id)
+    {
+        ${{ModelName}}Repository = app({{ModelName}}RepositoryInterface::class);
+        // dd(${{ModelName}}Repository);
+        ${{ModelName}}Repository->delete{{ModelName}}($id);
+        // Post::destroy($id);
+        session()->flash('message', '{{ModelName}} Deleted Successfully.');
+    }
+}

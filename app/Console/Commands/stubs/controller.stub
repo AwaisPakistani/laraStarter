@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers\admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Requests\{{ModelName}}Request;
+use App\Models\{{ModelName}};
+use App\Repositories\Interfaces\{{ModelName}}RepositoryInterface;
+
+class {{ModelName}}Controller extends Controller
+{
+    protected ${{ModelName}}interface;
+    /**
+     * Display a listing of the resource.
+     */
+    public function __construct({{ModelName}}RepositoryInterface ${{ModelName}}interface){
+        $this->{{ModelName}}interface= ${{ModelName}}interface;
+    }
+    public function index()
+    {
+        $allRecords = $this->{{ModelName}}interface->all();
+        return view('admin.{{ModelName}}s.index', compact('allRecords'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('admin.{{ModelName}}s.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store({{ModelName}}Request $request)
+    {
+        try {
+            $validated = $request->validated();
+            $this->{{ModelName}}interface->create($validated);
+            return redirect()->route('admin.{{modelName}}s.index');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit({{ModelName}} ${{ModelName}})
+    {
+        return view('admin.{{modelName}}s.edit',compact('{{ModelName}}'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({{ModelName}}Request $request, {{ModelName}} ${{ModelName}})
+    {
+         try {
+            $validated = $request->validated();
+            $this->{{ModelName}}interface->update(${{ModelName}}->id,$validated);
+            return redirect()->route('admin.{{modelName}}s.index');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy({{ModelName}} ${{ModelName}})
+    {
+        try {
+            $this->{{ModelName}}interface->delete(${{ModelName}}->id);
+            return redirect()->route('admin.{{modelName}}s.index');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+}
