@@ -9,6 +9,11 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        User::factory()->count(10)->create();
+        User::create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@gmail.com',
+            'password' => bcrypt('password'),
+            'status' => 'active',
+        ]);
     }
 }

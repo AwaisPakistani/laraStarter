@@ -62,7 +62,8 @@
                                          {{$loop->iteration}}</td>
                                         <td>{{$User->name}}</td>
                                         <td>
-                                            @statusBadge($User->status)
+                                            {{-- @statusBadge($User->status) --}}
+                                             @toggleStatus($User->status, route('users.toggleStatus', $User->id))
                                         </td>
                                         <td>
                                             {{-- <x-action-buttons
@@ -88,10 +89,49 @@
 </div>
 @section('scripts')
 <script src="{{asset('assets/vendors/simple-datatables/simple-datatables.js')}}"></script>
-    <script>
+<script>
         // Simple Datatable
         let table1 = document.querySelector('#table1');
         let dataTable = new simpleDatatables.DataTable(table1);
-    </script>
+</script>
+<script>
+    function toggleStatus(element) {
+    const url = element.dataset.url;
+    const isChecked = element.checked;
+    alert(url); return false;
+    // Optional: disable input during request to prevent double-clicks
+    element.disabled = true;
+
+    fetch(url, {
+        method: 'POST', // Change to PATCH or PUT if your route expects it
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            status: isChecked ? 'active' : 'inactive' // or true/false depending on your DB
+        })
+    })
+    .then(response => {
+        element.disabled = false;
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Optional: Show a success toast/notification
+        console.log('Status updated successfully:', data);
+    })
+    .catch(error => {
+        element.disabled = false;
+        // Revert the switch state if the request fails
+        element.checked = !isChecked;
+        alert('Failed to update status. Please try again.');
+        console.error('Error:', error);
+    });
+}
+</script>
 @stop
 @endsection
