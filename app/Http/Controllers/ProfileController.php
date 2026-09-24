@@ -12,6 +12,10 @@ use App\Jobs\SendEmailJob;
 
 class ProfileController extends Controller
 {
+    public function dashboard_one(): View
+    {
+        return view('admin.dashboard');
+    }
     /**
      * Display the user's profile form.
      */

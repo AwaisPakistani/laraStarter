@@ -30,26 +30,28 @@ class CustomBladeDirectiveProvider extends ServiceProvider
 
         // Toggle Active / Inactive Status one 
         
-        Blade::directive('toggleStatus', function ($expression) {
+        Blade::directive('toggleStatusStatic', function ($expression) {
+            $expression = trim($expression, '()');
+            
             return "<?php 
-                list(\$status, \$url) = array_map('trim', explode(',', $expression, 2));
-                \$isChecked = (\$status == 'active' || \$status == 1 || \$status === true) ? 'checked' : '';
-                
+                \$isChecked = ($expression === 'active') ? 'checked' : '';
                 echo '<div class=\"form-check form-switch\">
-                        <input class=\"form-check-input\" type=\"checkbox\" role=\"switch\" ' . \$isChecked . ' onchange=\"toggleStatus(this)\" data-url=\"' . \$url . '\">
+                        <input class=\"form-check-input\" type=\"checkbox\" role=\"switch\" ' . \$isChecked . ' onchange=\"toggleStatus(this)\" data-status=\"' . e($expression) . '\" >
                     </div>';
             ?>";
         });
 
         // Toggle staus directie status two
-        // Blade::directive('toggleStatus', function ($expression) {
-        //     return "<?php 
-        //         \$isChecked = ($expression === 'active') ? 'checked' : '';
-        //         echo '<div class=\"form-check form-switch\">
-        //                 <input class=\"form-check-input\" type=\"checkbox\" role=\"switch\" ' . \$isChecked . ' onchange=\"toggleStatus(this)\" data-status=\"' . e($expression) . '\" >
-        //             </div>';
-        //     ?>";
-         <!-- });  -->
+        Blade::directive('toggleStatusStatic', function ($expression) {
+            $expression = trim($expression, '()');
+            
+            return "<?php 
+                \$isChecked = ($expression === 'active') ? 'checked' : '';
+                echo '<div class=\"form-check form-switch\">
+                        <input class=\"form-check-input\" type=\"checkbox\" role=\"switch\" ' . \$isChecked . ' onchange=\"toggleStatus(this)\" data-status=\"' . e($expression) . '\" >
+                    </div>';
+            ?>";
+        });
 
         
           

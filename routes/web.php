@@ -35,6 +35,10 @@ Route::middleware('auth')->group(function () {
     ////////////////
     /////////ADMIN///////////
     Route::resource('users', UserController::class);
+    // Toggle Active / Inactive Status one
+    Route::post('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
+    // 
+    Route::get('dashboard-one', [ProfileController::class, 'dashboard_one'])->name('dashboard_one');
 });
 
 require __DIR__.'/auth.php';

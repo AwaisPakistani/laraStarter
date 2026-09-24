@@ -63,7 +63,7 @@
                                         <td>{{$User->name}}</td>
                                         <td>
                                             {{-- @statusBadge($User->status) --}}
-                                             @toggleStatus($User->status, route('users.toggleStatus', $User->id))
+                                             
                                         </td>
                                         <td>
                                             {{-- <x-action-buttons
