@@ -66,7 +66,7 @@
                                         </td>
                                         <td>
                                              <x-action-buttons
-                                            :canEdit="auth()->user()->has{{ModelName}}('admin.{{ModelName}}s.edit')" :canDelete="auth()->user()->has{{ModelName}}('admin.{{ModelName}}s.destroy')" :canShow="auth()->user()->has{{ModelName}}('admin.{{ModelName}}s.show')" :editRoute="route('admin.{{ModelName}}s.edit',${{ModelName}})" :deleteRoute="route('admin.{{ModelName}}s.destroy',${{ModelName}})" :showRoute="route('admin.{{ModelName}}s.show',${{ModelName}})"
+                                            :canEdit="auth()->user()->hasPermission('admin.{{ModelName}}s.edit')" :canDelete="auth()->user()->hasPermission('admin.{{ModelName}}s.destroy')" :canShow="auth()->user()->hashasPermission('admin.{{ModelName}}s.show')" :editRoute="route('admin.{{ModelName}}s.edit',${{ModelName}})" :deleteRoute="route('admin.{{ModelName}}s.destroy',${{ModelName}})" :showRoute="route('admin.{{ModelName}}s.show',${{ModelName}})"
                                             />
                                         </td>
                                     </tr>

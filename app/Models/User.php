@@ -42,4 +42,21 @@ class User extends Authenticatable
             set:fn($value)=>strtolower($value)//mutator
         );
     }
+    public function hasRole($role)
+    {
+        return $this->roles->contains('name', $role);
+    }
+    public function hasPermission($permission)
+    {
+        return ($this->hasRole('Super Admin') ? true :  $this->roles->flatMap->permissions->contains('name', $permission));
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->whereAny(
+            ['name', 'email'],
+            'like',
+            "%{$search}%"
+        );
+    }
 }

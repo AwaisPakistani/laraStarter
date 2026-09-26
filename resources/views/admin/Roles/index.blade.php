@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layout.master')
 @section('content')
 <!--style-->
 @section('style')
@@ -10,13 +10,13 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last">
-                            <h3>Users</h3>
+                            <h3>Roles</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Users</li>
+                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Roles</li>
                                 </ol>
                             </nav>
                         </div>
@@ -27,10 +27,10 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-md-10">
-                                    Users List
+                                    Roles List
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="{{ route('users.create') }}" class="btn btn-primary btn-outline">
+                                    <a href="{{ route('admin.{{modelName}}s.create') }}" class="btn btn-primary btn-outline">
                                         <span class="bi bi-plus"></span>Create
                                     </a>
                                 </div>
@@ -41,10 +41,10 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 {{-- Per page selector --}}
                                <x-no-of-pages
-                               perPageRoute="{{ route('users.index') }}"
+                               perPageRoute="{{ route('admin.Roles.index') }}"
                                />
                                 {{-- Your existing search component --}}
-                                <x-search-record searchRoute="{{ route('users.index') }}" />
+                                <x-search-record searchRoute="{{ route('admin.Roles.index') }}" />
                             </div>
                             <table class="table table-striped" id="table1">
                                 <thead>
@@ -56,19 +56,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($allRecords as $User)
+                                    @forelse ($allRecords as $Role)
                                     <tr>
                                         <td>
                                          {{$loop->iteration}}</td>
-                                        <td>{{$User->name}}</td>
+                                        <td>{{$Role->name}}</td>
                                         <td>
-                                            {{-- @statusBadge($User->status) --}}
-                                             
+                                            @statusBadge($Role->status)
                                         </td>
                                         <td>
-                                            <x-action-buttons
-                                            :canEdit="auth()->user()->hasPermission('users.edit')" :canDelete="auth()->user()->hasPermission('users.destroy')" :canShow="auth()->user()->hasPermission('users.show')" :editRoute="route('users.edit',$User)" :deleteRoute="route('users.destroy',$User)" :showRoute="route('users.show',$User)"
-                                            /> 
+                                             <x-action-buttons
+                                            :canEdit="auth()->user()->hasRole('admin.Roles.edit')" :canDelete="auth()->user()->hasRole('admin.Roles.destroy')" :canShow="auth()->user()->hasRole('admin.Roles.show')" :editRoute="route('admin.Roles.edit',$Role)" :deleteRoute="route('admin.Roles.destroy',$Role)" :showRoute="route('admin.Roles.show',$Role)"
+                                            />
                                         </td>
                                     </tr>
                                     @empty
@@ -79,7 +78,7 @@
                             </table>
                              <div class="row">
                                 <div class="col-md-12 text-right">
-                                {{-- {{ $allRecords->withQueryString()->links() }} --}}
+                                {{ $allRecords->withQueryString()->links() }}
                                 </div>
                             </div>
                         </div>
@@ -89,49 +88,10 @@
 </div>
 @section('scripts')
 <script src="{{asset('assets/vendors/simple-datatables/simple-datatables.js')}}"></script>
-<script>
+    <script>
         // Simple Datatable
         let table1 = document.querySelector('#table1');
         let dataTable = new simpleDatatables.DataTable(table1);
-</script>
-<script>
-    function toggleStatus(element) {
-    const url = element.dataset.url;
-    const isChecked = element.checked;
-    alert(url); return false;
-    // Optional: disable input during request to prevent double-clicks
-    element.disabled = true;
-
-    fetch(url, {
-        method: 'POST', // Change to PATCH or PUT if your route expects it
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-            status: isChecked ? 'active' : 'inactive' // or true/false depending on your DB
-        })
-    })
-    .then(response => {
-        element.disabled = false;
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Optional: Show a success toast/notification
-        console.log('Status updated successfully:', data);
-    })
-    .catch(error => {
-        element.disabled = false;
-        // Revert the switch state if the request fails
-        element.checked = !isChecked;
-        alert('Failed to update status. Please try again.');
-        console.error('Error:', error);
-    });
-}
-</script>
+    </script>
 @stop
 @endsection

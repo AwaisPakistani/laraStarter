@@ -34,10 +34,10 @@ class basic_crud_files extends Command
 
         if ($this->option('all')) {
                     // Generate Interface
-                $this->generateInterface($modelName);
+                // $this->generateInterface($modelName);
 
                 // Generate Repository
-                $this->generateRepository($modelName);
+                // $this->generateRepository($modelName);
 
                 // Generate Livewire Component
                 // $this->generateLivewireComponent($modelName);

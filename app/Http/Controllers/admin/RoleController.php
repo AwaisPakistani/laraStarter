@@ -4,24 +4,23 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\UserRequest;
-use App\Models\User;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Http\Requests\RoleRequest;
+use App\Models\Role;
+use App\Repositories\Interfaces\RoleRepositoryInterface;
 
-class UserController extends Controller
+class RoleController extends Controller
 {
-    protected $Userinterface;
+    protected $Roleinterface;
     /**
      * Display a listing of the resource.
      */
-    public function __construct(UserRepositoryInterface $Userinterface){
-        $this->Userinterface= $Userinterface;
+    public function __construct(RoleRepositoryInterface $Roleinterface){
+        $this->Roleinterface= $Roleinterface;
     }
     public function index()
-    { 
-        // dd(auth()->user()->roles);
-        $allRecords = $this->Userinterface->all();
-        return view('admin.Users.index', compact('allRecords'));
+    {
+        $allRecords = $this->Roleinterface->all();
+        return view('admin.Roles.index', compact('allRecords'));
     }
 
     /**
@@ -29,18 +28,18 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.Users.create');
+        return view('admin.Roles.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request)
+    public function store(RoleRequest $request)
     {
         try {
             $validated = $request->validated();
-            $this->Userinterface->create($validated);
-            return redirect()->route('admin.users.index');
+            $this->Roleinterface->create($validated);
+            return redirect()->route('admin.roles.index');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -57,20 +56,20 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $User)
+    public function edit(Role $Role)
     {
-        return view('admin.users.edit',compact('User'));
+        return view('admin.roles.edit',compact('Role'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, User $User)
+    public function update(RoleRequest $request, Role $Role)
     {
          try {
             $validated = $request->validated();
-            $this->Userinterface->update($User->id,$validated);
-            return redirect()->route('admin.users.index');
+            $this->Roleinterface->update($Role->id,$validated);
+            return redirect()->route('admin.roles.index');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -79,11 +78,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $User)
+    public function destroy(Role $Role)
     {
         try {
-            $this->Userinterface->delete($User->id);
-            return redirect()->route('admin.users.index');
+            $this->Roleinterface->delete($Role->id);
+            return redirect()->route('admin.roles.index');
         } catch (\Throwable $th) {
             throw $th;
         }
