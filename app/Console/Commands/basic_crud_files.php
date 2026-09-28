@@ -33,11 +33,13 @@ class basic_crud_files extends Command
         $modelName = $this->argument('name');
 
         if ($this->option('all')) {
+                // Generate Model File
+                // $this->model($modelName);
                     // Generate Interface
-                // $this->generateInterface($modelName);
+                $this->generateInterface($modelName);
 
                 // Generate Repository
-                // $this->generateRepository($modelName);
+                $this->generateRepository($modelName);
 
                 // Generate Livewire Component
                 // $this->generateLivewireComponent($modelName);
@@ -56,10 +58,6 @@ class basic_crud_files extends Command
                 $this->createBlade($modelName);
                 // Generate Blade update files
                 $this->UpdateBlade($modelName);
-
-
-                // Generate Model File
-                $this->model($modelName);
 
                 // Generate Migration File
                 // $this->generateMigration($modelName);

@@ -4,7 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\admin\UserController;
+use App\Http\Controllers\admin\{UserController, RoleController, PermissionController};
 Route::get('/', function () {
     return view('welcome');
 });
@@ -35,6 +35,11 @@ Route::middleware('auth')->group(function () {
     ////////////////
     /////////ADMIN///////////
     Route::resource('users', UserController::class);
+    // Roles
+    Route::resource('roles', RoleController::class);
+    // Permissions
+    Route::resource('permissions', PermissionController::class);
+
     // Toggle Active / Inactive Status one
     Route::post('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
     // 

@@ -30,6 +30,12 @@
                                 <li class="submenu-item ">
                                     <a href="{{ route('users.index')}}">Users</a>
                                 </li>
+                                 <li class="submenu-item ">
+                                    <a href="{{ route('roles.index')}}">Roles</a>
+                                </li>
+                                 <li class="submenu-item ">
+                                    <a href="{{ route('permissions.index')}}">Permissions</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>

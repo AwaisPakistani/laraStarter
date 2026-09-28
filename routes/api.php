@@ -7,4 +7,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 // update status
-Route::post('/update-status/{id}', [StatusController::class, 'update']);
+// Route::post('/update-status/{id}', [StatusController::class, 'update']);
