@@ -58,7 +58,7 @@ class RoleController extends Controller
      */
     public function edit(Role $Role)
     {
-        return view('admin.roles.edit',compact('Role'));
+        return view('admin.Roles.edit',compact('Role'));
     }
 
     /**
@@ -85,6 +85,17 @@ class RoleController extends Controller
             return redirect()->route('admin.roles.index');
         } catch (\Throwable $th) {
             throw $th;
+        }
+    }
+
+    public function toggleStatus(Request $request){
+        // dd($request->all());
+        try {
+            $roleId = $request->roleId;
+            $this->Roleinterface->toggleStatus($roleId);
+            return response()->json(['success' => true, 'message' => 'Role status updated successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Failed to update role status.']);
         }
     }
 }

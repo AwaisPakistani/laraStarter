@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 @section('content')
 <!--style-->
 @section('style')
@@ -15,7 +15,7 @@
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Permissions</li>
                                 </ol>
                             </nav>
@@ -30,7 +30,7 @@
                                     Permissions List
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="{{ route('admin.{{modelName}}s.create') }}" class="btn btn-primary btn-outline">
+                                    <a href="{{ route('permissions.create') }}" class="btn btn-primary btn-outline">
                                         <span class="bi bi-plus"></span>Create
                                     </a>
                                 </div>
@@ -41,10 +41,10 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 {{-- Per page selector --}}
                                <x-no-of-pages
-                               perPageRoute="{{ route('admin.Permissions.index') }}"
+                               perPageRoute="{{ route('permissions.index') }}"
                                />
                                 {{-- Your existing search component --}}
-                                <x-search-record searchRoute="{{ route('admin.Permissions.index') }}" />
+                                <x-search-record searchRoute="{{ route('permissions.index') }}" />
                             </div>
                             <table class="table table-striped" id="table1">
                                 <thead>
@@ -66,7 +66,7 @@
                                         </td>
                                         <td>
                                              <x-action-buttons
-                                            :canEdit="auth()->user()->hasPermission('admin.Permissions.edit')" :canDelete="auth()->user()->hasPermission('admin.Permissions.destroy')" :canShow="auth()->user()->hashasPermission('admin.Permissions.show')" :editRoute="route('admin.Permissions.edit',$Permission)" :deleteRoute="route('admin.Permissions.destroy',$Permission)" :showRoute="route('admin.Permissions.show',$Permission)"
+                                            :canEdit="auth()->user()->hasPermission('permissions.edit')" :canDelete="auth()->user()->hasPermission('permissions.destroy')" :canShow="auth()->user()->hasPermission('permissions.show')" :editRoute="route('permissions.edit',$Permission)" :deleteRoute="route('permissions.destroy',$Permission)" :showRoute="route('permissions.show',$Permission)"
                                             />
                                         </td>
                                     </tr>
@@ -78,7 +78,7 @@
                             </table>
                              <div class="row">
                                 <div class="col-md-12 text-right">
-                                {{ $allRecords->withQueryString()->links() }}
+                                {{--{{ $allRecords->withQueryString()->links() }}--}}
                                 </div>
                             </div>
                         </div>

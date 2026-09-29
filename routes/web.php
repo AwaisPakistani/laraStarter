@@ -17,7 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    // import 
+    // import
     Route::post('/sales/import', [SaleController::class,'import']);
     Route::get('/sales/export', [SaleController::class, 'export'])
     ->name('sales.export');
@@ -35,14 +35,18 @@ Route::middleware('auth')->group(function () {
     ////////////////
     /////////ADMIN///////////
     Route::resource('users', UserController::class);
+
     // Roles
     Route::resource('roles', RoleController::class);
+     // Active/ Inactive Status
+    Route::post('roles/{roleId}/change-status', [RoleController::class, 'toggleStatus'])->name('roles.toggleStatus');
     // Permissions
+
     Route::resource('permissions', PermissionController::class);
 
     // Toggle Active / Inactive Status one
     Route::post('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
-    // 
+    //
     Route::get('dashboard-one', [ProfileController::class, 'dashboard_one'])->name('dashboard_one');
 });
 

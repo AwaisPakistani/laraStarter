@@ -9,10 +9,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class Permission extends SpatiePermission
 {
         protected $fillable= ['name'];
-        protected function name() : Attribute 
+        protected function name() : Attribute
         {
             return Attribute::make(
-                get: fn ($value) => ucfirst($value),
                 set: fn ($value) => strtolower($value),
             );
         }

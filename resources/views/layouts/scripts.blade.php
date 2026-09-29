@@ -9,5 +9,11 @@
 <script src={{asset('assets/js/main.js')}}></script>
 
 <script src={{asset('assets/vendors/jquery/jquery.min.js')}}></script>
+<script src={{asset('assets/vendors/jquery/additional-methods.min.js')}}></script>
+<script src={{asset('assets/vendors/choices.js/choices.min.js')}}></script>
+<script src={{asset('assets/js/extensions/choices.js')}}></script>
+<script src={{asset('assets/vendors/toastify/toastify.js')}}></script>
+<script src={{asset('assets/js/extensions/toastify.js')}}></script>
+<script src={{asset('assets/js/admin.js')}}></script>
 
 

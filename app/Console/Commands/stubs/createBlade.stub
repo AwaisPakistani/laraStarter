@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 @section('content')
 <!--style-->
 @section('style')
@@ -14,7 +14,7 @@
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{ url()->previous() }}">{{ModelName}}s</a></li>
                     </ol>
                 </nav>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('admin.{{modelName}}s.store') }}" method="POST" class="form">@csrf
+                            <form action="{{ route('{{ModelName}}s.store') }}" method="POST" class="form">@csrf
                                 <div class="row">
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">

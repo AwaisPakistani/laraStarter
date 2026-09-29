@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 @section('content')
 <!--style-->
 @section('style')
@@ -31,7 +31,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('admin.{{modelName}}s.store') }}" method="POST" class="form">@csrf
+                            <form action="{{ route('Permissions.store') }}" method="POST" class="form">@csrf
                                 <div class="row">
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">

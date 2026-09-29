@@ -8,23 +8,23 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-#[Signature('app:basic_crud_files 
-    {name : The name of the model} 
-    {--repository : Generate Repository Files} 
-    {--request : Generate a Request} 
-    {--migration : Generate a migration} 
-    {--model : Generate a Model} 
-    {--seeder : Generate a seeder} 
-    {--controller : Generate a controller} 
-    {--view : Generate a view} 
-    {--index : Generate a Index view} 
-    {--create : Generate a Creaet view} 
-    {--update : Generate a Update view} 
-    {--route : Generate a Route} 
+#[Signature('app:basic_crud_files
+    {name : The name of the model}
+    {--repository : Generate Repository Files}
+    {--request : Generate a Request}
+    {--migration : Generate a migration}
+    {--model : Generate a Model}
+    {--seeder : Generate a seeder}
+    {--controller : Generate a controller}
+    {--view : Generate a view}
+    {--index : Generate a Index view}
+    {--create : Generate a Creaet view}
+    {--update : Generate a Update view}
+    {--route : Generate a Route}
     {--all : Generate all files}')]
 #[Description('Generated basic CRUD files for a given model')]
 class basic_crud_files extends Command
-{      
+{
     /**
      * Execute the console command.
      */

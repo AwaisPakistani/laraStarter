@@ -16,25 +16,45 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
             'status' => 'active',
         ]);
- 
+
         // Create Role
         $superadmin_role = Role::create([
             'name' => 'super_admin',
         ]);
         $superadmin->roles()->attach($superadmin_role);
         // make permissions
-        $permissions = [
+        $users_permissions = [
             'users.index',
             'users.create',
             'users.edit',
             'users.destroy',
-            'users.show'
+            'users.show',
         ];
-        foreach ($permissions as $permission) {
+         $roles_permissions = [
+            'roles.index',
+            'roles.create',
+            'roles.edit',
+            'roles.destroy',
+            'roles.show',
+        ];
+        $permissions_permissions = [
+            'permissions.index',
+            'permissions.create',
+            'permissions.edit',
+            'permissions.destroy',
+            'permissions.show',
+        ];
+        foreach ($users_permissions as $permission) {
             Permission::create(['name' => $permission,'guard_name' => 'web']);
         }
-       
-        // Admin Role 
+        foreach ($roles_permissions as $permission) {
+            Permission::create(['name' => $permission,'guard_name' => 'web']);
+        }
+        foreach ($permissions_permissions as $permission) {
+            Permission::create(['name' => $permission,'guard_name' => 'web']);
+        }
+
+        // Admin Role
         $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
@@ -48,6 +68,8 @@ class UserSeeder extends Seeder
 
          // give permission to superadmin
         $superadmin_role->givePermissionTo(Permission::all());
+        // gibe permissions to admin
+        $admin_role->givePermissionTo($permissions_permissions);
     }
-            
+
 }

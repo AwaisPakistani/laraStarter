@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 @section('content')
 <!--style-->
 @section('style')
@@ -15,7 +15,7 @@
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Roles</li>
                                 </ol>
                             </nav>
@@ -30,7 +30,7 @@
                                     Roles List
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="{{ route('admin.{{modelName}}s.create') }}" class="btn btn-primary btn-outline">
+                                    <a href="{{ route('roles.create') }}" class="btn btn-primary btn-outline">
                                         <span class="bi bi-plus"></span>Create
                                     </a>
                                 </div>
@@ -41,10 +41,10 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 {{-- Per page selector --}}
                                <x-no-of-pages
-                               perPageRoute="{{ route('admin.Roles.index') }}"
+                               perPageRoute="{{ route('roles.index') }}"
                                />
                                 {{-- Your existing search component --}}
-                                <x-search-record searchRoute="{{ route('admin.Roles.index') }}" />
+                                <x-search-record searchRoute="{{ route('roles.index') }}" />
                             </div>
                             <table class="table table-striped" id="table1">
                                 <thead>
@@ -62,11 +62,13 @@
                                          {{$loop->iteration}}</td>
                                         <td>{{$Role->name}}</td>
                                         <td>
-                                            @statusBadge($Role->status)
+                                            <span id="status_change" data-id="{{$Role->id}}">
+                                            @toggleStatusStatic($Role->status)
+                                            </span>
                                         </td>
                                         <td>
                                              <x-action-buttons
-                                            :canEdit="auth()->user()->hasRole('admin.Roles.edit')" :canDelete="auth()->user()->hasRole('admin.Roles.destroy')" :canShow="auth()->user()->hasRole('admin.Roles.show')" :editRoute="route('admin.Roles.edit',$Role)" :deleteRoute="route('admin.Roles.destroy',$Role)" :showRoute="route('admin.Roles.show',$Role)"
+                                            :canEdit="auth()->user()->hasPermission('roles.edit')" :canDelete="auth()->user()->hasPermission('roles.destroy')" :canShow="auth()->user()->hasPermission('roles.show')" :editRoute="route('roles.edit',$Role)" :deleteRoute="route('roles.destroy',$Role)" :showRoute="route('roles.show',$Role)"
                                             />
                                         </td>
                                     </tr>
@@ -78,7 +80,7 @@
                             </table>
                              <div class="row">
                                 <div class="col-md-12 text-right">
-                                {{ $allRecords->withQueryString()->links() }}
+                                {{--{{ $allRecords->withQueryString()->links() }}--}}
                                 </div>
                             </div>
                         </div>

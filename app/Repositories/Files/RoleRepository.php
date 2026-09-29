@@ -42,4 +42,11 @@ class RoleRepository implements RoleRepositoryInterface
         $model->delete();
         return $model;
     }
+    public function toggleStatus($id)
+    {
+        $role = $this->model->findOrFail($id);
+        $role->status = $role->status === 'active' ? 'inactive' : 'active';
+        $role->save();
+        return $role;
+    }
 }

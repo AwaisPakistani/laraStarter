@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 @section('content')
 <!--style-->
 @section('style')
@@ -14,7 +14,7 @@
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{ url()->previous() }}">Roles</a></li>
                     </ol>
                 </nav>
@@ -31,11 +31,11 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('admin.{{modelName}}s.update',$Role->id) }}" method="POST" class="form">
+                            <form action="{{ route('roles.update',$Role->id) }}" method="POST" class="form">
                             @csrf
                             @method('PUT')
                                 <div class="row">
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="name-column">User Name</label>
                                             <input type="text" id="user-name-column" value="{{ old('name',$Role->name) }}" class="form-control @error('name')
@@ -49,21 +49,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group">
-                                            <label for="email-id-column">Email</label>
-                                            <input type="email" value="{{ old('email',$Role->email) }}"id="email-id-column" class="form-control @error('email')
-                                            is-invalid
-                                            @enderror"
-                                            name="email" placeholder="Email">
-                                            @error('email')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
 
-                                        </div>
-                                    </div>
                                     <div class="col-12 d-flex justify-content-end">
                                         <button type="submit"
                                         class="btn btn-primary me-1 mb-1">Submit</button>

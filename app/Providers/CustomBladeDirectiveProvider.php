@@ -28,12 +28,12 @@ class CustomBladeDirectiveProvider extends ServiceProvider
         });
 
 
-        // Toggle Active / Inactive Status one 
-        
+        // Toggle Active / Inactive Status one
+
         Blade::directive('toggleStatusStatic', function ($expression) {
             $expression = trim($expression, '()');
-            
-            return "<?php 
+
+            return "<?php
                 \$isChecked = ($expression === 'active') ? 'checked' : '';
                 echo '<div class=\"form-check form-switch\">
                         <input class=\"form-check-input\" type=\"checkbox\" role=\"switch\" ' . \$isChecked . ' onchange=\"toggleStatus(this)\" data-status=\"' . e($expression) . '\" >
@@ -41,20 +41,6 @@ class CustomBladeDirectiveProvider extends ServiceProvider
             ?>";
         });
 
-        // Toggle staus directie status two
-        Blade::directive('toggleStatusStatic', function ($expression) {
-            $expression = trim($expression, '()');
-            
-            return "<?php 
-                \$isChecked = ($expression === 'active') ? 'checked' : '';
-                echo '<div class=\"form-check form-switch\">
-                        <input class=\"form-check-input\" type=\"checkbox\" role=\"switch\" ' . \$isChecked . ' onchange=\"toggleStatus(this)\" data-status=\"' . e($expression) . '\" >
-                    </div>';
-            ?>";
-        });
-
-        
-          
     }
 }
 

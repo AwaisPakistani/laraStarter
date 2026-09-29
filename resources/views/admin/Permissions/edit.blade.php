@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 @section('content')
 <!--style-->
 @section('style')
@@ -31,7 +31,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('admin.{{modelName}}s.update',$Permission->id) }}" method="POST" class="form">
+                            <form action="{{ route('admin.Permissions.update',$Permission->id) }}" method="POST" class="form">
                             @csrf
                             @method('PUT')
                                 <div class="row">
