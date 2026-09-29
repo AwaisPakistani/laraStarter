@@ -58,7 +58,7 @@ class PermissionController extends Controller
      */
     public function edit(Permission $Permission)
     {
-        return view('admin.permissions.edit',compact('Permission'));
+        return view('admin.Permissions.edit',compact('Permission'));
     }
 
     /**

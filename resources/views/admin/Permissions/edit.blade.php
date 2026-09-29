@@ -14,7 +14,7 @@
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{ url()->previous() }}">Permissions</a></li>
                     </ol>
                 </nav>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('admin.Permissions.update',$Permission->id) }}" method="POST" class="form">
+                            <form action="{{ route('permissions.update',$Permission->id) }}" method="POST" class="form">
                             @csrf
                             @method('PUT')
                                 <div class="row">

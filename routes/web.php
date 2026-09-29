@@ -13,7 +13,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','permission'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -48,6 +48,9 @@ Route::middleware('auth')->group(function () {
     Route::post('permissions/{permissionId}/change-status', [PermissionController::class, 'toggleStatus'])->name('users.toggleStatus');
     //
     Route::get('dashboard-one', [ProfileController::class, 'dashboard_one'])->name('dashboard_one');
+    /////////////////////
+    /////Other Routes////
+    /////////////////////
 });
 
 require __DIR__.'/auth.php';
