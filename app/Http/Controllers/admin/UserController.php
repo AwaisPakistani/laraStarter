@@ -88,4 +88,14 @@ class UserController extends Controller
             throw $th;
         }
     }
+    public function toggleStatus(Request $request){
+        // dd($request->all());
+        try {
+            $userId = $request->id;
+            $this->Userinterface->toggleStatus($userId);
+            return response()->json(['success' => true, 'message' => 'User status updated successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Failed to update user status.']);
+        }
+    }
 }

@@ -62,7 +62,10 @@
                                          {{$loop->iteration}}</td>
                                         <td>{{$Permission->name}}</td>
                                         <td>
-                                            @statusBadge($Permission->status)
+                                            {{--@statusBadge($Permission->status)--}}
+                                            <span id="status_change" data-id="{{$Permission->id}}" data-name="permissions">
+                                            @toggleStatusStatic($Permission->status)
+                                            </span>
                                         </td>
                                         <td>
                                              <x-action-buttons

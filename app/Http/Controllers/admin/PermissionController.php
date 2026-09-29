@@ -87,4 +87,14 @@ class PermissionController extends Controller
             throw $th;
         }
     }
+    public function toggleStatus(Request $request){
+        // dd($request->all());
+        try {
+            $permissionId = $request->id;
+            $this->Permissioninterface->toggleStatus($permissionId);
+            return response()->json(['success' => true, 'message' => 'Permission status updated successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Failed to update permission status.']);
+        }
+    }
 }

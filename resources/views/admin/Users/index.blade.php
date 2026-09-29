@@ -62,8 +62,9 @@
                                          {{$loop->iteration}}</td>
                                         <td>{{$User->name}}</td>
                                         <td>
-                                            {{-- @statusBadge($User->status) --}}
-                                             
+                                           <span id="status_change" data-id="{{$User->id}}" data-name="users">
+                                            @toggleStatusStatic($User->status)
+                                            </span>
                                         </td>
                                         <td>
                                             <x-action-buttons

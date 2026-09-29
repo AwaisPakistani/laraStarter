@@ -1,13 +1,14 @@
 $(document).ready(function() {
-    // Role Status Change active/inactive
+    // Model Status Change active/inactive
   $(document).on('click', '#status_change', function() {
-    var roleId = $(this).data('id');
+    var modelId = $(this).data('id');
+    var dataName = $(this).data('name');
     $.ajax({
-      url: '/roles/' + roleId + '/change-status',
+      url: dataName +'/'+ modelId + '/change-status',
       type: 'POST',
       data: {
         _token: $('meta[name="csrf-token"]').attr('content'),
-        roleId: roleId
+        id: modelId
       },
       success: function(response) {
         if (response.success) {

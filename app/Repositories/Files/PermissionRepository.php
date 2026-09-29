@@ -42,4 +42,11 @@ class PermissionRepository implements PermissionRepositoryInterface
         $model->delete();
         return $model;
     }
+    public function toggleStatus($id)
+    {
+        $modelName = $this->model->findOrFail($id);
+        $modelName->status = $modelName->status === 'active' ? 'inactive' : 'active';
+        $modelName->save();
+        return $modelName;
+    }
 }

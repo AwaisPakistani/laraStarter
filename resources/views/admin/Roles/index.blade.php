@@ -62,7 +62,7 @@
                                          {{$loop->iteration}}</td>
                                         <td>{{$Role->name}}</td>
                                         <td>
-                                            <span id="status_change" data-id="{{$Role->id}}">
+                                            <span id="status_change" data-id="{{$Role->id}}" data-name="roles">
                                             @toggleStatusStatic($Role->status)
                                             </span>
                                         </td>
