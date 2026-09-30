@@ -35,6 +35,7 @@ class UserSeeder extends Seeder
             'users.destroy',
             'users.show',
             'users.toggleStatus',
+            'dashboard_one',
         ];
         $roles_permissions = [
             'roles.index',
@@ -83,6 +84,6 @@ class UserSeeder extends Seeder
 
         // Give specific permissions to admin using a query or filtered collection
         $adminPermissions = Permission::whereIn('name', $permissions_permissions)->get();
-        $admin_role->givePermissionTo($adminPermissions);
+        $admin_role->givePermissionTo($adminPermissions,'dashboard_one');
     }
 }
