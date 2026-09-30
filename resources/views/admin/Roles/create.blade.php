@@ -44,8 +44,9 @@
                                 <th>All Module</th>
                             </tr>
                         </thead>
-                       <tbody>
+                        <tbody>
                             @php
+                                // Ensure these match your exact action suffixes in the database
                                 $actions = ['index', 'create', 'edit', 'destroy', 'show', 'toggleStatus'];
                             @endphp
 
@@ -56,8 +57,13 @@
 
                                         @foreach($actions as $action)
                                             @php
+                                                // This constructs e.g. 'users.toggleStatus'
                                                 $permName = $module . '.' . $action;
-                                                $permission = $modulePermissions->firstWhere('name', $permName);
+
+                                                // Fallback check to find it even if case differs slightly in DB
+                                                $permission = $modulePermissions->first(function ($p) use ($permName) {
+                                                    return strtolower($p->name) === strtolower($permName);
+                                                });
                                             @endphp
                                             <td>
                                                 @if($permission)
@@ -70,7 +76,7 @@
                                                                data-action="{{ $action }}">
                                                     </div>
                                                 @else
-                                                    <span class="text-muted">-</span>
+                                                    <span class="text-muted" title="Missing: {{ $permName }}">-</span>
                                                 @endif
                                             </td>
                                         @endforeach
