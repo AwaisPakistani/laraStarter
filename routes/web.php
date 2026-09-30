@@ -35,7 +35,7 @@ Route::middleware(['auth','permission'])->group(function () {
     ////////////////
     /////////ADMIN///////////
     Route::resource('users', UserController::class);
-    Route::post('users/{userId}/change-status', [UserController::class, 'toggleStatus'])->name('roles.toggleStatus');
+    Route::post('users/{userId}/change-status', [UserController::class, 'toggleStatus'])->name('users.toggleStatus');
     // Permissions
     // Roles
     Route::resource('roles', RoleController::class);
@@ -45,7 +45,7 @@ Route::middleware(['auth','permission'])->group(function () {
 
     Route::resource('permissions', PermissionController::class);
 
-    Route::post('permissions/{permissionId}/change-status', [PermissionController::class, 'toggleStatus'])->name('users.toggleStatus');
+    Route::post('permissions/{permissionId}/change-status', [PermissionController::class, 'toggleStatus'])->name('permissions.toggleStatus');
     //
     Route::get('dashboard-one', [ProfileController::class, 'dashboard_one'])->name('dashboard_one');
     /////////////////////

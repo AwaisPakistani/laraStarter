@@ -14,7 +14,7 @@
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{ url()->previous() }}">Permissions</a></li>
                     </ol>
                 </nav>
@@ -31,15 +31,15 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('Permissions.store') }}" method="POST" class="form">@csrf
+                            <form action="{{ route('permissions.store') }}" method="POST" class="form">@csrf
                                 <div class="row">
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="title-column"> Name</label>
-                                            <input type="text" id="user-name-column" value="{{ old('name') }}" class="form-control @error('name')
+                                            <input type="text" id="permission-name-column" value="{{ old('name') }}" class="form-control @error('name')
                                             is-invalid
                                             @enderror"
-                                            placeholder="User Name" name="name">
+                                            placeholder="Permission Name" name="name">
                                             @error('name')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -47,21 +47,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group">
-                                            <label for="email-id-column">Email</label>
-                                            <input type="email" value="{{ old('email') }}"id="email-id-column" class="form-control @error('email')
-                                            is-invalid
-                                            @enderror"
-                                            name="email" placeholder="Email">
-                                            @error('email')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
 
-                                        </div>
-                                    </div>
                                     <div class="col-12 d-flex justify-content-end">
                                         <button type="submit"
                                         class="btn btn-primary me-1 mb-1">Submit</button>

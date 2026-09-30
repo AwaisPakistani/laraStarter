@@ -81,7 +81,7 @@
                             </table>
                              <div class="row">
                                 <div class="col-md-12 text-right">
-                                {{--{{ $allRecords->withQueryString()->links() }}--}}
+                                {{ $allRecords->withQueryString()->links() }}
                                 </div>
                             </div>
                         </div>

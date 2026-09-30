@@ -15,4 +15,12 @@ class Permission extends SpatiePermission
                 set: fn ($value) => strtolower($value),
             );
         }
+        public function scopeSearch($query, $search)
+        {
+            return $query->whereAny(
+                ['name'],
+                'like',
+                "%{$search}%"
+            );
+        }
 }

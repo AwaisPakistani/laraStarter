@@ -16,7 +16,12 @@ class RoleRepository implements RoleRepositoryInterface
 
     public function all()
     {
-        return $this->model->all();
+        $search = request()->input('search');
+        $no_of_items = request()->input('perPage', 10);
+
+        return $this->model
+        ->search($search)
+        ->paginate($no_of_items);
     }
 
     public function find($id)

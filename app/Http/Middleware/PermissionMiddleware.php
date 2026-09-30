@@ -19,15 +19,21 @@ class PermissionMiddleware
         if($user->hasRole('super_admin')){
             return $next($request);
         }else{
-            $roleName = auth()->user()->roles->first();
-            $permissions = $roleName->getPermissionNames();
-            $url = $request->route()->url();
+            $role = auth()->user()->roles->first();
+            $roleName= $role->name;
+            // $permissions = $role->getPermissionNames();
+            $route_name = $request->route()->getName();
 
-            dd($url);
-            $permission = Permission::where('name', $url)->first();
-            dd($permission);
-            // if($user->hasPermissionTo())
-            return $next($request);
+            $permission = Permission::where('name', $route_name)->first();
+            // If the permission doesn't exist in the database, deny access immediately
+            if (!$permission) {
+                abort(403, 'Unauthorized action. No permission defined for this route.');
+            }
+            if($role->hasPermissionTo($permission->name)){
+                return $next($request);
+            }
+            abort(403, 'Unauthorized action.');
+
         }
     }
 }

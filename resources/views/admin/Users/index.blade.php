@@ -69,7 +69,7 @@
                                         <td>
                                             <x-action-buttons
                                             :canEdit="auth()->user()->hasPermission('users.edit')" :canDelete="auth()->user()->hasPermission('users.destroy')" :canShow="auth()->user()->hasPermission('users.show')" :editRoute="route('users.edit',$User)" :deleteRoute="route('users.destroy',$User)" :showRoute="route('users.show',$User)"
-                                            /> 
+                                            />
                                         </td>
                                     </tr>
                                     @empty
@@ -80,7 +80,7 @@
                             </table>
                              <div class="row">
                                 <div class="col-md-12 text-right">
-                                {{-- {{ $allRecords->withQueryString()->links() }} --}}
+                                {{ $allRecords->withQueryString()->links() }}
                                 </div>
                             </div>
                         </div>
