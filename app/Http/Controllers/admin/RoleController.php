@@ -5,8 +5,8 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\RoleRequest;
-use App\Models\Role;
 use App\Repositories\Interfaces\RoleRepositoryInterface;
+use App\Models\{Role,Permission};
 
 class RoleController extends Controller
 {
@@ -28,7 +28,12 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('admin.Roles.create');
+        $permissions = Permission::all();
+        // Group permissions by their module name (e.g., 'users' from 'users.index')
+        $groupedPermissions = $permissions->groupBy(function($permission) {
+            return explode('.', $permission->name)[0];
+        });
+        return view('admin.Roles.create', compact('groupedPermissions'));
     }
 
     /**
@@ -36,6 +41,7 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+        dd($request->all());
         try {
             $validated = $request->validated();
             $this->Roleinterface->create($validated);

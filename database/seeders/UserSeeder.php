@@ -27,6 +27,11 @@ class UserSeeder extends Seeder
         ]);
         $superadmin->roles()->attach($superadmin_role);
 
+        // Dashboard route
+        $dashboard_routes = [
+           'dashboard_one',
+           'dashboard',
+        ];
         // Make permissions
         $users_permissions = [
             'users.index',
@@ -35,7 +40,6 @@ class UserSeeder extends Seeder
             'users.destroy',
             'users.show',
             'users.toggleStatus',
-            'dashboard_one',
         ];
         $roles_permissions = [
             'roles.index',
@@ -54,6 +58,9 @@ class UserSeeder extends Seeder
             'permissions.toggleStatus',
         ];
 
+        foreach($dashboard_routes as $route) {
+            Permission::create(['name' => $route, 'guard_name' => 'web']);
+        }
         foreach ($users_permissions as $permission) {
             Permission::create(['name' => $permission, 'guard_name' => 'web']);
         }

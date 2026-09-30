@@ -21,6 +21,7 @@ class PermissionMiddleware
         // $permissions = $role->getPermissionNames();
         $route_name = $request->route()->getName();
         $permission = Permission::where('name', $route_name)->first();
+        // Super admin have all permissions
         if($user->hasRole('super_admin')){
             return $next($request);
         }
