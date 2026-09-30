@@ -41,11 +41,10 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
-        dd($request->all());
         try {
             $validated = $request->validated();
             $this->Roleinterface->create($validated);
-            return redirect()->route('admin.roles.index');
+            return redirect()->route('roles.index');
         } catch (\Throwable $th) {
             throw $th;
         }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
-use App\Models\User;
+use App\Models\{User,Role};
 use App\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserController extends Controller
@@ -18,7 +18,7 @@ class UserController extends Controller
         $this->Userinterface= $Userinterface;
     }
     public function index()
-    { 
+    {
         // dd(auth()->user()->roles);
         $allRecords = $this->Userinterface->all();
         return view('admin.Users.index', compact('allRecords'));
@@ -29,7 +29,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.Users.create');
+        $roles = Role::all();
+        return view('admin.Users.create', compact('roles'));
     }
 
     /**
@@ -40,7 +41,7 @@ class UserController extends Controller
         try {
             $validated = $request->validated();
             $this->Userinterface->create($validated);
-            return redirect()->route('admin.users.index');
+            return redirect()->route('users.index');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -83,7 +84,7 @@ class UserController extends Controller
     {
         try {
             $this->Userinterface->delete($User->id);
-            return redirect()->route('admin.users.index');
+            return redirect()->route('users.index');
         } catch (\Throwable $th) {
             throw $th;
         }

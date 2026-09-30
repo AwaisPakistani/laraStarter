@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.master')
 @section('content')
 <!--style-->
 @section('style')
@@ -14,7 +14,7 @@
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{ url()->previous() }}">Users</a></li>
                     </ol>
                 </nav>
@@ -31,8 +31,25 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form action="{{ route('admin.{{modelName}}s.store') }}" method="POST" class="form">@csrf
+                            <form action="{{ route('users.store') }}" method="POST" class="form">@csrf
                                 <div class="row">
+                                    <div class="col-md-12 col-12">
+                                        <div class="form-group">
+                                            <label for="roles-column"> Roles</label>
+                                            <select class="form-control choices closable @error('roles') is-invalid @enderror" aria-haspopup="true" aria-expanded="false" id="roles-column" name="roles[]" multiple>
+                                                @foreach($roles as $role)
+                                                    <option value="{{ $role->id }}" {{ in_array($role->id, old('roles', [])) ? 'selected' : '' }}>
+                                                        {{ $role->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('roles')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="title-column"> Name</label>
@@ -55,6 +72,36 @@
                                             @enderror"
                                             name="email" placeholder="Email">
                                             @error('email')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="email-id-column">Password</label>
+                                            <input type="password" value="{{ old('password') }}"id="password-id-column" class="form-control @error('password')
+                                            is-invalid
+                                            @enderror"
+                                            name="password" placeholder="Email">
+                                            @error('password')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="email-id-column">Confirm Password</label>
+                                            <input type="password" value="{{ old('password_confirmation') }}"id="password_confirmation-id-column" class="form-control @error('password_confirmation')
+                                            is-invalid
+                                            @enderror"
+                                            name="password_confirmation" placeholder="Email">
+                                            @error('password_confirmation')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>

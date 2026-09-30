@@ -4,7 +4,7 @@ namespace App\Repositories\Files;
 
 use App\Models\Role;
 use App\Repositories\Interfaces\RoleRepositoryInterface;
-
+use Illuminate\Support\Facades\DB;
 class RoleRepository implements RoleRepositoryInterface
 {
     protected $model;
@@ -31,7 +31,14 @@ class RoleRepository implements RoleRepositoryInterface
 
     public function create(array $data)
     {
-        return $this->model->create($data);
+        return DB::transaction(function () use ($data) {
+            // Ensure guard_name has a default if not provided
+            $data['guard_name'] = $data['guard_name'] ?? 'web';
+
+            return tap($this->model->create($data), function ($role) use ($data) {
+                $role->syncPermissions($data['permissions'] ?? []);
+            });
+        });
     }
 
     public function update($id, array $data)

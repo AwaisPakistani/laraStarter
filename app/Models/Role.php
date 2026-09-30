@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 class Role extends SpatieRole
 {
-    protected $fillable= ['name'];
+    protected $fillable= ['name','guard_name'];
     protected function name() : Attribute
     {
         return Attribute::make(

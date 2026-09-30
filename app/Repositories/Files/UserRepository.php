@@ -2,9 +2,9 @@
 
 namespace App\Repositories\Files;
 
-use App\Models\User;
+use App\Models\{User,Role};
 use App\Repositories\Interfaces\UserRepositoryInterface;
-
+use Illuminate\Support\Facades\DB;
 class UserRepository implements UserRepositoryInterface
 {
     protected $model;
@@ -31,7 +31,17 @@ class UserRepository implements UserRepositoryInterface
 
     public function create(array $data)
     {
-        return $this->model->create($data);
+        return DB::transaction(function () use ($data) {
+            return tap($this->model->create($data), function ($user) use ($data) {
+                if (!empty($data['roles'])) {
+                    // If IDs were passed, find their names first
+                    $roleNames = Role::whereIn('id', $data['roles'])->pluck('name')->toArray();
+                    $user->syncRoles($roleNames);
+                } else {
+                    $user->syncRoles([]);
+                }
+            });
+        });
     }
 
     public function update($id, array $data)

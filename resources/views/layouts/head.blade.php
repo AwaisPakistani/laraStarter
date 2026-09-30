@@ -15,6 +15,7 @@
     <!--- main imports end-->
     <!-- toastify-->
     <link rel="stylesheet" href={{asset('assets/vendors/toastify/toastify.css')}}>
+    <link rel="stylesheet" href={{asset('assets/vendors/choices.js/choices.min.css')}}>
     <!-- //toastify-->
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
-    
+
