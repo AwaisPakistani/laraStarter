@@ -13,6 +13,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('dashboard-one', [ProfileController::class, 'dashboard_one'])->middleware(['auth', 'verified'])->name('dashboard_one');
 Route::middleware(['auth','permission'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -46,8 +47,6 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::resource('permissions', PermissionController::class);
 
     Route::post('permissions/{permissionId}/change-status', [PermissionController::class, 'toggleStatus'])->name('permissions.toggleStatus');
-    //
-    Route::get('dashboard-one', [ProfileController::class, 'dashboard_one'])->name('dashboard_one');
     /////////////////////
     /////Other Routes////
     /////////////////////

@@ -67,7 +67,7 @@ class RoleRepository implements RoleRepositoryInterface
             }, $permissionsInput);
 
             // 4. Sync permissions (Spatie handles both arrays of IDs or arrays of names)
-            $role->syncPermissions($permissions,'dashboard_one');
+            $role->syncPermissions($permissions);
 
             return $role;
         });

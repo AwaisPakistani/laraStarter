@@ -1,5 +1,4 @@
 @extends('layouts.master')
-
 @section('style')
 <link rel="stylesheet" href="{{ asset('assets/vendors/iconly/bold.css') }}">
 @endsection
