@@ -95,7 +95,7 @@ class RoleController extends Controller
     {
         try {
             $this->Roleinterface->delete($Role->id);
-            return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
+            return back()->with('success', 'Role deleted successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }

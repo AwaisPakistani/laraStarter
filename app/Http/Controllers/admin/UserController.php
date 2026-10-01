@@ -86,7 +86,7 @@ class UserController extends Controller
     {
         try {
             $this->Userinterface->delete($User->id);
-            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+            return back()->with('success', 'User deleted successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }

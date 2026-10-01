@@ -82,7 +82,7 @@ class PermissionController extends Controller
     {
         try {
             $this->Permissioninterface->delete($Permission->id);
-            return redirect()->route('permissions.index')->with('success', 'Permission deleted successfully.');
+            return back()->with('success', 'Permission deleted successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }

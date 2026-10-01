@@ -59,7 +59,7 @@
                                     @forelse ($allRecords as $Role)
                                     <tr>
                                         <td>
-                                         {{$loop->iteration}}</td>
+                                         {{ $loop->iteration + $allRecords->firstItem() - 1 }}</td>
                                         <td>{{$Role->name}}</td>
                                         <td>
                                             <span id="status_change" data-id="{{$Role->id}}" data-name="roles">

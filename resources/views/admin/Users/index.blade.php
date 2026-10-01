@@ -60,7 +60,7 @@
                                     @forelse ($allRecords as $User)
                                     <tr>
                                         <td>
-                                         {{$loop->iteration}}</td>
+                                         {{ $loop->iteration + $allRecords->firstItem() - 1 }}</td>
                                         <td>{{$User->name}}</td>
                                         <td>{{$User->email}}</td>
                                         <td>

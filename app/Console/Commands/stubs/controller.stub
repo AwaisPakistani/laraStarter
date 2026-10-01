@@ -82,7 +82,7 @@ class {{ModelName}}Controller extends Controller
     {
         try {
             $this->{{ModelName}}interface->delete(${{ModelName}}->id);
-            return redirect()->route('admin.{{modelName}}s.index');
+            return back()->with('success', 'Record deleted successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }
