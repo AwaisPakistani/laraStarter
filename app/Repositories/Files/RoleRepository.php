@@ -36,16 +36,41 @@ class RoleRepository implements RoleRepositoryInterface
             $data['guard_name'] = $data['guard_name'] ?? 'web';
 
             return tap($this->model->create($data), function ($role) use ($data) {
-                $role->syncPermissions($data['permissions'] ?? []);
+                // Convert string IDs like ["1", "2"] into integers like [1, 2]
+                $permissions = isset($data['permissions'])
+                    ? array_map('intval', $data['permissions'])
+                    : [];
+
+                $role->givePermissionTo($permissions);
             });
         });
     }
 
-    public function update($id, array $data)
-    {
-        $model = $this->model->findOrFail($id);
-        $model->update($data);
-        return $model;
+   public function update($id, array $data)
+   {
+        return DB::transaction(function () use ($id, $data) {
+            $role = $this->model->findOrFail($id);
+
+            // 1. Update the role name
+            $role->update([
+                'name' => $data['name'] ?? $role->name,
+            ]);
+
+            // 2. Extract permissions safely
+            $permissionsInput = $data['permissions'] ?? [];
+
+            // 3. Check if inputs are numeric (IDs) or strings (Permission names)
+            // If they are numeric strings like "8", "9", convert them to integers.
+            // If they are permission names, leave them as strings.
+            $permissions = array_map(function ($permission) {
+                return is_numeric($permission) ? (int) $permission : $permission;
+            }, $permissionsInput);
+
+            // 4. Sync permissions (Spatie handles both arrays of IDs or arrays of names)
+            $role->syncPermissions($permissions);
+
+            return $role;
+        });
     }
 
     public function delete($id)

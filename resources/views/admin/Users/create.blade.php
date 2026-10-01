@@ -85,7 +85,7 @@
                                             <input type="password" value="{{ old('password') }}"id="password-id-column" class="form-control @error('password')
                                             is-invalid
                                             @enderror"
-                                            name="password" placeholder="Email">
+                                            name="password" placeholder="Password">
                                             @error('password')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -100,7 +100,7 @@
                                             <input type="password" value="{{ old('password_confirmation') }}"id="password_confirmation-id-column" class="form-control @error('password_confirmation')
                                             is-invalid
                                             @enderror"
-                                            name="password_confirmation" placeholder="Email">
+                                            name="password_confirmation" placeholder="Password Confirmation">
                                             @error('password_confirmation')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}

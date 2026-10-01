@@ -41,7 +41,7 @@ class UserController extends Controller
         try {
             $validated = $request->validated();
             $this->Userinterface->create($validated);
-            return redirect()->route('users.index');
+            return redirect()->route('users.index')->with('success','User created successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -71,7 +71,7 @@ class UserController extends Controller
          try {
             $validated = $request->validated();
             $this->Userinterface->update($User->id,$validated);
-            return redirect()->route('admin.users.index');
+            return redirect()->route('users.index')->with('success', 'User updated successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -84,7 +84,7 @@ class UserController extends Controller
     {
         try {
             $this->Userinterface->delete($User->id);
-            return redirect()->route('users.index');
+            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }

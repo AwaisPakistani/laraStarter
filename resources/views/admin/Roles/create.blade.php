@@ -99,6 +99,8 @@
 
                 <div class="mt-4 text-end">
                     <button type="submit" class="btn btn-primary px-4">Save Role</button>
+                     <a href="{{ url()->previous() }}""
+                                        class="btn btn-light-secondary me-1 mb-1">Back</a>
                 </div>
             </form>
         </div>

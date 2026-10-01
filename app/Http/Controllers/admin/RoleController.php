@@ -41,10 +41,12 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+
         try {
             $validated = $request->validated();
+            // dd($validated);
             $this->Roleinterface->create($validated);
-            return redirect()->route('roles.index');
+            return redirect()->route('roles.index')->with('success', 'Role created successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -63,7 +65,12 @@ class RoleController extends Controller
      */
     public function edit(Role $Role)
     {
-        return view('admin.Roles.edit',compact('Role'));
+        $permissions = Permission::all();
+        // Group permissions by their module name (e.g., 'users' from 'users.index')
+        $groupedPermissions = $permissions->groupBy(function($permission) {
+            return explode('.', $permission->name)[0];
+        });
+        return view('admin.Roles.edit',compact('groupedPermissions','Role'));
     }
 
     /**
@@ -71,10 +78,13 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, Role $Role)
     {
+
+
+        // dd($request->all());
          try {
             $validated = $request->validated();
             $this->Roleinterface->update($Role->id,$validated);
-            return redirect()->route('admin.roles.index');
+            return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -87,7 +97,7 @@ class RoleController extends Controller
     {
         try {
             $this->Roleinterface->delete($Role->id);
-            return redirect()->route('admin.roles.index');
+            return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }
