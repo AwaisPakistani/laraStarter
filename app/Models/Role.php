@@ -12,7 +12,7 @@ class Role extends SpatieRole
     protected function name() : Attribute
     {
         return Attribute::make(
-            get: fn ($value) => ucfirst($value),
+            // get: fn ($value) => ucfirst($value),
             set: fn ($value) => strtolower($value),
         );
     }

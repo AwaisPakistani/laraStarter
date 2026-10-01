@@ -26,7 +26,7 @@ class PermissionMiddleware
             return $next($request);
         }
         // If the permission doesn't exist in the database, deny access immediately
-        if (!$permission) {
+        if (!$permission || !$route_name=='dashboard' || !$route_name=='dashboard_one') {
             abort(403, 'Unauthorized action. No permission defined for this route.');
         }
         // using hasPermissions is the function defined in the User model to check if the user has the required permission
