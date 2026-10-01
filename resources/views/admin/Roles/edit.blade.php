@@ -84,11 +84,18 @@
 
                                         <!-- Row-level Toggle -->
                                         <td>
+                                            @php
+                                                // Check if every permission belonging to this module is contained in the role's permissions
+                                                $allRowChecked = $modulePermissions->isNotEmpty() && $modulePermissions->every(function($p) use ($Role) {
+                                                    return $Role->permissions->contains($p->id);
+                                                });
+                                            @endphp
                                             <div class="form-check form-switch d-flex justify-content-center m-0">
                                                 <input class="form-check-input row-toggle"
-                                                       type="checkbox"
-                                                       data-module="{{ $module }}"
-                                                       onchange="toggleRowPermissions('{{ $module }}', this)" >
+                                                    type="checkbox"
+                                                    data-module="{{ $module }}"
+                                                    onchange="toggleRowPermissions('{{ $module }}', this)"
+                                                    {{ $allRowChecked ? 'checked' : '' }}>
                                             </div>
                                         </td>
                                     </tr>
@@ -109,6 +116,17 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Check if all permission checkboxes are checked, then turn on global 'Select All'
+        const allPermissions = document.querySelectorAll('.permission-checkbox');
+        if (allPermissions.length > 0) {
+            const allChecked = Array.from(allPermissions).every(cb => cb.checked);
+            if (allChecked) {
+                document.getElementById('selectAllGlobal').checked = true;
+            }
+        }
+    });
+
     function toggleAllPermissions(masterCheckbox) {
         const isChecked = masterCheckbox.checked;
         document.querySelectorAll('.permission-checkbox').forEach(cb => cb.checked = isChecked);
