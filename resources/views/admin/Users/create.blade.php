@@ -36,7 +36,7 @@
                                     <div class="col-md-12 col-12">
                                         <div class="form-group">
                                             <label for="roles-column"> Roles</label>
-                                            <select class="form-control choices closable @error('roles') is-invalid @enderror" aria-haspopup="true" aria-expanded="false" id="roles-column" name="roles[]" multiple>
+                                            <select class="choices form-select multiple-remove @error('roles') is-invalid @enderror" aria-haspopup="true" aria-expanded="false" id="roles-column" name="roles[]" multiple>
                                                 @foreach($roles as $role)
                                                     <option value="{{ $role->id }}" {{ in_array($role->id, old('roles', [])) ? 'selected' : '' }}>
                                                         {{ $role->name }}

@@ -69,7 +69,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $User)
     {
-        dd($request->all());
+        // dd($request->all());
          try {
             $validated = $request->validated();
             $this->Userinterface->update($User->id,$validated);

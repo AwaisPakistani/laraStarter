@@ -51,6 +51,7 @@
                                     <tr>
                                         <th>Sr#</th>
                                         <th>Name</th>
+                                        <th>Email</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -61,6 +62,7 @@
                                         <td>
                                          {{$loop->iteration}}</td>
                                         <td>{{$User->name}}</td>
+                                        <td>{{$User->email}}</td>
                                         <td>
                                            <span id="status_change" data-id="{{$User->id}}" data-name="users">
                                             @toggleStatusStatic($User->status)
