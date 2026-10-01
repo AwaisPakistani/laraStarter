@@ -11,7 +11,16 @@ class UserRequest extends FormRequest
         return true;
     }
 
-    public function rules()
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('roles')) {
+            $this->merge([
+                'roles' => array_values($this->input('roles', []))
+            ]);
+        }
+    }
+
+    public function rules(): array
     {
         return [
             'name' => 'required|string|max:255',

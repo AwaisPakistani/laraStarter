@@ -29,7 +29,8 @@ class PermissionMiddleware
         if (!$permission) {
             abort(403, 'Unauthorized action. No permission defined for this route.');
         }
-        if($role->hasPermissionTo($permission->name)){
+        // using hasPermissions is the function defined in the User model to check if the user has the required permission
+        if(auth()->user()->hasPermission($permission->name)){
                 return $next($request);
         }
         abort(403, 'Unauthorized action.');

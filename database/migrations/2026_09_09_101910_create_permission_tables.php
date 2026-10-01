@@ -25,7 +25,7 @@ return new class extends Migration
          */
         Schema::create($tableNames['permissions'], static function (Blueprint $table) {
             $table->id(); // permission id
-            $table->string('name');
+            $table->string('name')->index();
             $table->string('guard_name');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
@@ -42,7 +42,7 @@ return new class extends Migration
                 $table->unsignedBigInteger($columnNames['team_foreign_key'])->nullable();
                 $table->index($columnNames['team_foreign_key'], 'roles_team_foreign_key_index');
             }
-            $table->string('name');
+            $table->string('name')->index();
             $table->string('guard_name');
              $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();

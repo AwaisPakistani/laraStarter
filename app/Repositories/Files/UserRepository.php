@@ -46,9 +46,20 @@ class UserRepository implements UserRepositoryInterface
 
     public function update($id, array $data)
     {
-        $model = $this->model->findOrFail($id);
-        $model->update($data);
-        return $model;
+        return DB::transaction(function () use ($id, $data) {
+            $user = $this->model->findOrFail($id);
+            $user->update($data);
+
+            if (!empty($data['roles'])) {
+                // If IDs were passed, find their names first
+                $roleNames = Role::whereIn('id', $data['roles'])->pluck('name')->toArray();
+                $user->syncRoles($roleNames);
+            } else {
+                $user->syncRoles([]);
+            }
+
+            return $user;
+        });
     }
 
     public function delete($id)

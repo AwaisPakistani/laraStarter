@@ -60,7 +60,8 @@ class UserController extends Controller
      */
     public function edit(User $User)
     {
-        return view('admin.users.edit',compact('User'));
+        $roles = Role::all();
+        return view('admin.Users.edit',compact('User', 'roles'));
     }
 
     /**
@@ -68,6 +69,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $User)
     {
+        dd($request->all());
          try {
             $validated = $request->validated();
             $this->Userinterface->update($User->id,$validated);

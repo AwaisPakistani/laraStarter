@@ -46,8 +46,8 @@ class RoleRepository implements RoleRepositoryInterface
         });
     }
 
-   public function update($id, array $data)
-   {
+    public function update($id, array $data)
+    {
         return DB::transaction(function () use ($id, $data) {
             $role = $this->model->findOrFail($id);
 
@@ -67,7 +67,7 @@ class RoleRepository implements RoleRepositoryInterface
             }, $permissionsInput);
 
             // 4. Sync permissions (Spatie handles both arrays of IDs or arrays of names)
-            $role->syncPermissions($permissions);
+            $role->syncPermissions($permissions,'dashboard_one');
 
             return $role;
         });
