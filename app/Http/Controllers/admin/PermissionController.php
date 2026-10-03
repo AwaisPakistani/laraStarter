@@ -20,6 +20,9 @@ class PermissionController extends Controller
     public function index()
     {
         $allRecords = $this->Permissioninterface->all();
+        if (request()->has('page') && $allRecords->isEmpty() && $allRecords->currentPage() > 1) {
+            return redirect()->route('permissions.index', ['page' => $allRecords->lastPage()]);
+        }
         return view('admin.Permissions.index', compact('allRecords'));
     }
 
@@ -78,10 +81,10 @@ class PermissionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Permission $Permission)
+    public function destroy(Permission $permission)
     {
         try {
-            $this->Permissioninterface->delete($Permission->id);
+            $this->Permissioninterface->delete($permission->id);
             return back()->with('success', 'Permission deleted successfully.');
         } catch (\Throwable $th) {
             throw $th;

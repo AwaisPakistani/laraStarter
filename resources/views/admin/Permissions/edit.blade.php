@@ -35,10 +35,10 @@
                             @csrf
                             @method('PUT')
                                 <div class="row">
-                                    <div class="col-md-6 col-12">
+                                    <div class="col-md-12 col-12">
                                         <div class="form-group">
-                                            <label for="name-column">User Name</label>
-                                            <input type="text" id="user-name-column" value="{{ old('name',$Permission->name) }}" class="form-control @error('name')
+                                            <label for="name-column">Permission Name</label>
+                                            <input type="text" id="name-column" value="{{ old('name',$Permission->name) }}" class="form-control @error('name')
                                             is-invalid
                                             @enderror"
                                             placeholder="Name" name="name">
@@ -49,21 +49,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group">
-                                            <label for="email-id-column">Email</label>
-                                            <input type="email" value="{{ old('email',$Permission->email) }}"id="email-id-column" class="form-control @error('email')
-                                            is-invalid
-                                            @enderror"
-                                            name="email" placeholder="Email">
-                                            @error('email')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
 
-                                        </div>
-                                    </div>
                                     <div class="col-12 d-flex justify-content-end">
                                         <button type="submit"
                                         class="btn btn-primary me-1 mb-1">Submit</button>

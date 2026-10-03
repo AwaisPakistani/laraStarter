@@ -21,6 +21,9 @@ class UserController extends Controller
     {
         // dd(auth()->user()->roles);
         $allRecords = $this->Userinterface->all();
+        if (request()->has('page') && $allRecords->isEmpty() && $allRecords->currentPage() > 1) {
+            return redirect()->route('users.index', ['page' => $allRecords->lastPage()]);
+        }
         return view('admin.Users.index', compact('allRecords'));
     }
 

@@ -4,7 +4,7 @@ namespace App\Repositories\Files;
 
 use App\Models\Permission;
 use App\Repositories\Interfaces\PermissionRepositoryInterface;
-
+use Illuminate\Support\Facades\DB;
 class PermissionRepository implements PermissionRepositoryInterface
 {
     protected $model;
@@ -31,7 +31,12 @@ class PermissionRepository implements PermissionRepositoryInterface
 
     public function create(array $data)
     {
-        return $this->model->create($data);
+        return DB::transaction(function () use ($data) {
+            // Ensure guard_name has a default if not provided
+            $data['guard_name'] = $data['guard_name'] ?? 'web';
+
+            return $this->model->create($data);
+        });
     }
 
     public function update($id, array $data)

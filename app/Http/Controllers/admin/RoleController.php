@@ -20,6 +20,9 @@ class RoleController extends Controller
     public function index()
     {
         $allRecords = $this->Roleinterface->all();
+        if (request()->has('page') && $allRecords->isEmpty() && $allRecords->currentPage() > 1) {
+            return redirect()->route('roles.index', ['page' => $allRecords->lastPage()]);
+        }
         return view('admin.Roles.index', compact('allRecords'));
     }
 

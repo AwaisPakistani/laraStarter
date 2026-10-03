@@ -20,6 +20,9 @@ class {{ModelName}}Controller extends Controller
     public function index()
     {
         $allRecords = $this->{{ModelName}}interface->all();
+        if (request()->has('page') && $allRecords->isEmpty() && $allRecords->currentPage() > 1) {
+            return redirect()->route('{{ModelName}}s.index', ['page' => $allRecords->lastPage()]);
+        }
         return view('admin.{{ModelName}}s.index', compact('allRecords'));
     }
 

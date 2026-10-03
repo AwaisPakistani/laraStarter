@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Permission extends SpatiePermission
 {
-        protected $fillable= ['name'];
+        protected $fillable= ['name', 'guard_name', 'status'];
         protected function name() : Attribute
         {
             return Attribute::make(
