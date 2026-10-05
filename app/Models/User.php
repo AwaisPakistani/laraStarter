@@ -59,4 +59,8 @@ class User extends Authenticatable
             "%{$search}%"
         );
     }
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
 }

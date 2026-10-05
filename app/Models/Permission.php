@@ -23,4 +23,7 @@ class Permission extends SpatiePermission
                 "%{$search}%"
             );
         }
+        public function scopeActive($query){
+            return $query->where('status','active');
+        }
 }

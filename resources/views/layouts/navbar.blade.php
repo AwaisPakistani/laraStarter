@@ -61,9 +61,7 @@
                                             Profile</a></li>
                                     <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>
                                             Settings</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-wallet me-2"></i>
-                                            Wallet</a></li>
-                                    <li>
+
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
@@ -73,7 +71,7 @@
                                                 this.closest('form').submit();"><i
                                                 class="icon-mid bi bi-box-arrow-left me-2"></i>
 
-                                               <button class="btn btn-sm btn-danger" type="submit">Logout</button>
+                                               <button class="btn btn-sm btn-default" type="submit">Logout</button>
 
                                             </a>
                                             </form>

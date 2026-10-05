@@ -19,7 +19,7 @@
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <div class="auth-logo">
-                        <a href="{{ route('dashboard') }}"><img src="{{asset('assets/images/logo/logo.png')}}" alt="Logo"></a>
+                        <a href="{{ route('dashboard_one') }}"><img src="{{asset('assets/images/logo/logo.png')}}" alt="Logo"></a>
                     </div>
                     <h1 class="auth-title">Log in</h1>
                     <p class="auth-subtitle mb-1">Log in with your data that you entered during registration.</p>
@@ -49,7 +49,7 @@
                             </label>
                         </div>
                         {{-- resources/views/auth/login.blade.php --}}
-                        
+
 
                         <div class="row">
                             <div class="col-md-12">

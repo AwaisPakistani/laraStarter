@@ -16,6 +16,10 @@ class PermissionMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $user = auth()->user();
+        // Check user active status
+        if($user->active() == false){
+            abort(403, 'Unauthorized action. User is inactive.');
+        }
         $role = $user->roles->first();
         $roleName= $role->name;
         // $permissions = $role->getPermissionNames();

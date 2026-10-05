@@ -28,86 +28,85 @@ class MakeCrudColumns extends Command
 
     public function handle()
     {
-        $name = Str::studly($this->argument('name'));
+        $modelName = Str::studly($this->argument('name'));
         $columnsArg = $this->argument('columns');
         // Parse columns e.g. "title:string,body:text" -> [ ['name' => 'title', 'type' => 'string'], ... ]
         $columns = $this->parseColumns($columnsArg);
 
-        $this->info("Processing CRUD files or fields for {$name}...");
+        $this->info("Processing CRUD files or fields for {$modelName}...");
 
         if($this->option('all')){
-            $this->generateInterface($modelName);
-            $this->generateRepository($modelName);
-            $this->generateRequest($name, $columns);
-            $this->GenerateModel($name, $columns);
-            $this->updateOrCreateMigration($name, $columns);
-            $this->generateSeeder($modelName);
-            $this->generateController($modelName);
-            $this->indexBlade($modelName);
-            $this->createBlade($modelName);
-            $this->updateBlade($modelName);
-            $this->generateRoutes($modelName);
+            $this->generateInterface($modelName,$columns);
+            $this->generateRepository($modelName,$columns);
+            $this->generateRequest($modelName, $columns);
+            $this->GenerateModel($modelName, $columns);
+            $this->updateOrCreateMigration($modelName, $columns);
+            $this->generateSeeder($modelName, $columns);
+            $this->generateController($modelName, $columns);
+            $this->indexBlade($modelName, $columns);
+            $this->createBlade($modelName, $columns);
+            $this->updateBlade($modelName, $columns);
+            $this->generateRoutes($modelName, $columns);
         }
         if ($this->option('repository')) {
             // Generate Interface
-            $this->generateInterface($modelName);
+            $this->generateInterface($modelName, $columns);
 
             // Generate Repository
-            $this->generateRepository($modelName);
+            $this->generateRepository($modelName, $columns);
 
             $this->info("Successfully generated interface and reposritory files!");
         }
         if ($this->option('request')) {
             // Generate Request
-            $this->generateRequest($name, $columns);
+            $this->generateRequest($modelName, $columns);
             $this->info("Successfully generated Validation Request!");
         }
 
         if ($this->option('model')) {
             // Generate Model File
-            $this->GenerateModel($name, $columns);
+            $this->GenerateModel($modelName, $columns);
             $this->info("Successfully generated Model!");
         }
 
         if ($this->option('migration')) {
             // Generate Migration File
-             $this->updateOrCreateMigration($name, $columns);
+             $this->updateOrCreateMigration($modelName, $columns);
              $this->info("Successfully generated Migration File!");
         }
         if ($this->option('seeder')) {
              // Generate Seeder File
-            $this->generateSeeder($modelName);
+            $this->generateSeeder($modelName , $columns);
             $this->info("Successfully generated Seeder File!");
         }
 
         if ($this->option('controller')) {
-            $this->generateController($modelName);
+            $this->generateController($modelName, $columns);
             $this->info("Successfully generated Controller!");
         }
         if ($this->option('index')) {
              // Generate Livewire Blade File
-            $this->indexBlade($modelName);
+            $this->indexBlade($modelName, $columns);
             $this->info("Successfully generated Index Blade File!");
         }
         if ($this->option('create')) {
              // Generate Livewire Blade File
-            $this->createBlade($modelName);
+            $this->createBlade($modelName, $columns);
             $this->info("Successfully generated Create Blade File!");
         }
         if ($this->option('update')) {
              // Generate Livewire Blade File
-            $this->updateBlade($modelName);
+            $this->updateBlade($modelName, $columns);
             $this->info("Successfully generated Update Blade File!");
         }
 
         if ($this->option('route')) {
-            $this->generateRoutes($modelName);
+            $this->generateRoutes($modelName, $columns);
         }
-
 
     }
 
-    protected function generateInterface($modelName)
+    protected function generateInterface($modelName, $columns)
     {
         $interfacePath = app_path("Repositories/Interfaces/{$modelName}RepositoryInterface.php");
 
@@ -121,7 +120,7 @@ class MakeCrudColumns extends Command
         File::put($interfacePath, $stub);
     }
 
-    protected function generateRepository($modelName)
+    protected function generateRepository($modelName, $columns)
     {
         $repositoryPath = app_path("Repositories/Files/{$modelName}Repository.php");
 
@@ -149,13 +148,26 @@ class MakeCrudColumns extends Command
 
         return $parsed;
     }
+    // with stub
+    public function GenerateModel($modelName){
+        $modelPath = app_path("Models/{$modelName}.php");
 
-    protected function GenerateModel($name, $columns)
+        if (!File::exists(dirname($modelPath))) {
+            File::makeDirectory(dirname($modelPath), 0755, true);
+        }
+
+        $stub = File::get(__DIR__ . '/stubs/model.stub');
+        $stub = str_replace('{{ModelName}}', $modelName, $stub);
+
+        File::put($modelPath, $stub);
+    }
+    // without stub
+    protected function createModel($modelName, $columns)
     {
-        $modelPath = app_path("Models/{$name}.php");
+        $modelPath = app_path("Models/{$modelName}.php");
 
         if (!File::exists($modelPath)) {
-            $this->warn("Model {$name} does not exist. Skipping fillable update.");
+            $this->warn("Model {$modelName} does not exist. Skipping fillable update.");
             return;
         }
 
@@ -175,17 +187,17 @@ class MakeCrudColumns extends Command
         } else {
             // Inject $fillable right after class opening
             $fieldsString = "'" . implode("', '", $columnNames) . "'";
-            $replacement = "class {$name} extends Model\n{\n    protected \$fillable = [{$fieldsString}];\n";
-            $content = preg_replace('/class\s+' . $name . '\s+extends\s+Model\s*\{/', $replacement, $content);
+            $replacement = "class {$modelName} extends Model\n{\n    protected \$fillable = [{$fieldsString}];\n";
+            $content = preg_replace('/class\s+' . $modelName . '\s+extends\s+Model\s*\{/', $replacement, $content);
         }
 
         File::put($modelPath, $content);
-        $this->line("<info>Updated Model:</info> {$name}.php");
+        $this->line("<info>Updated Model:</info> {$modelName}.php");
     }
 
-    protected function updateOrCreateMigration($name, $columns)
+    protected function updateOrCreateMigration($modelName, $columns)
     {
-        $tableName = Str::snake(Str::plural($name));
+        $tableName = Str::snake(Str::plural($modelName));
         $migrationName = "add_columns_to_{$tableName}_table";
 
         // Generate migration using Artisan
@@ -217,9 +229,9 @@ class MakeCrudColumns extends Command
         $this->line("<info>Created/Updated Migration:</info> " . basename($migrationPath));
     }
 
-    protected function generateRequest($name, $columns)
+    protected function generateRequest($modelName, $columns)
     {
-        $requestName = "{$name}Request";
+        $requestName = "{$modelName}Request";
         $requestPath = app_path("Http/Requests/{$requestName}.php");
 
         if (!File::exists($requestPath)) {

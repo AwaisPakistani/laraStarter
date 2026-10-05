@@ -9,9 +9,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('dashboard-one', [ProfileController::class, 'dashboard_one'])->middleware(['auth', 'verified'])->name('dashboard_one');
 Route::middleware(['auth','permission'])->group(function () {
