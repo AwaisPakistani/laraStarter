@@ -42,7 +42,7 @@ class {{ModelName}}Controller extends Controller
         try {
             $validated = $request->validated();
             $this->{{ModelName}}interface->create($validated);
-            return redirect()->route('admin.{{modelName}}s.index');
+            return redirect()->route('admin.{{modelName}}s.index')->with('success','{{modelName}} created successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -51,9 +51,9 @@ class {{ModelName}}Controller extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show({{ModelName}} ${{ModelName}})
     {
-        //
+        return view('admin.{{modelName}}s.show',compact('{{ModelName}}'));
     }
 
     /**
@@ -72,7 +72,7 @@ class {{ModelName}}Controller extends Controller
          try {
             $validated = $request->validated();
             $this->{{ModelName}}interface->update(${{ModelName}}->id,$validated);
-            return redirect()->route('admin.{{modelName}}s.index');
+            return redirect()->route('admin.{{modelName}}s.index')->with('success', '{{modelName}} updated successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -85,9 +85,20 @@ class {{ModelName}}Controller extends Controller
     {
         try {
             $this->{{ModelName}}interface->delete(${{ModelName}}->id);
-            return back()->with('success', 'Record deleted successfully.');
+            return back()->with('success', '{{ModelName}} deleted successfully.');
         } catch (\Throwable $th) {
             throw $th;
+        }
+    }
+
+    public function toggleStatus(Request $request){
+        // dd($request->all());
+        try {
+            $recordId = $request->id;
+            $this->{{ModelName}}interface->toggleStatus($recordId);
+            return response()->json(['success' => true, 'message' => '{{ModelName}} status updated successfully.']);
+        } catch (\Throwable $th) {
+            return response()->json(['success' => false, 'message' => 'Failed to update {{ModelName}} status.']);
         }
     }
 }

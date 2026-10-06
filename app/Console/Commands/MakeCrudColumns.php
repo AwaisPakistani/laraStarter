@@ -106,6 +106,7 @@ class MakeCrudColumns extends Command
 
     }
 
+    // done
     protected function generateInterface($modelName, $columns)
     {
         $interfacePath = app_path("Repositories/Interfaces/{$modelName}RepositoryInterface.php");
@@ -132,9 +133,19 @@ class MakeCrudColumns extends Command
 
         File::put($repositoryPath, $stub);
     }
+    protected function generateController($modelName)
+    {
+        $controllerPath = app_path("Http/Controllers/admin/{$modelName}Controller.php");
 
+        if (!File::exists(dirname($controllerPath))) {
+            File::makeDirectory(dirname($controllerPath), 0755, true);
+        }
 
-    // done
+        $stub = File::get(__DIR__ . '/stubs/controller.stub');
+        $stub = str_replace(['{{ModelName}}','{{modelName}}'], [$modelName,Str::camel($modelName)], $stub);
+
+        File::put($controllerPath, $stub);
+    }
     protected function parseColumns($columnsArg)
     {
         $parsed = [];
