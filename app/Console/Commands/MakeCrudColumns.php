@@ -352,4 +352,18 @@ class MakeCrudColumns extends Command
             default => 'required|string|max:255',
         };
     }
+
+    public function generateSeeder($modelName)
+    {
+        $seederName = "{$modelName}Seeder";
+        $seederPath = database_path("seeders/{$seederName}.php");
+
+        $stub = File::get(__DIR__.'/stubs/seeder.stub');
+        $stub = str_replace('{{ModelName}}', $modelName, $stub);
+        $stub = str_replace('{{modelName}}', strtolower($modelName), $stub);
+
+        File::put($seederPath, $stub);
+
+        return $seederPath;
+    }
 }
