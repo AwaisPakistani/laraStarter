@@ -366,4 +366,41 @@ class MakeCrudColumns extends Command
 
         return $seederPath;
     }
+
+    // indexBlade
+    public function indexBlade($modelName, array $columns)
+    {
+        $indexBladePath = resource_path("views/admin/{$modelName}s/index.blade.php");
+
+        if (!File::exists(dirname($indexBladePath))) {
+            File::makeDirectory(dirname($indexBladePath), 0755, true);
+        }
+
+        $lowerModelName = strtolower($modelName);
+
+        // Grab only the first two columns safely
+        $firstTwoColumns = array_slice($columns, 0, 2);
+
+        $tableHeaders = '';
+        $tableColumns = '';
+
+        foreach ($firstTwoColumns as $column) {
+            $colName = $column['name'];
+            $studlyName = Str::studly($colName);
+
+            // Generate Header (e.g., <th>Title</th>)
+            $tableHeaders .= "<th>{$studlyName}</th>\n            ";
+
+            // Generate Cell (e.g., <td>{{ $post->title }}</td>)
+            $tableColumns .= "<td>{{ \${$lowerModelName}->{$colName} }}</td>\n            ";
+        }
+
+        $stub = File::get(__DIR__ . '/stubs/indexBlade.stub');
+        $stub = str_replace('{{ModelName}}', $modelName, $stub);
+        $stub = str_replace('{{modelName}}', $lowerModelName, $stub);
+        $stub = str_replace('{{TableHeaders}}', trim($tableHeaders), $stub);
+        $stub = str_replace('{{TableColumns}}', trim($tableColumns), $stub);
+
+        File::put($indexBladePath, $stub);
+    }
 }

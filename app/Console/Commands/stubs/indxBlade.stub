@@ -41,35 +41,32 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 {{-- Per page selector --}}
                                <x-no-of-pages
-                               perPageRoute="{{ route('{{modelName}}s.index') }}"
+                               perPageRoute="{{ route('{{ModelName}}s.index') }}"
                                />
                                 {{-- Your existing search component --}}
-                                <x-search-record searchRoute="{{ route('{{modelName}}s.index') }}" />
+                                <x-search-record searchRoute="{{ route('{{ModelName}}s.index') }}" />
                             </div>
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
                                         <th>Sr#</th>
-                                        {{TableHeaders}}
+                                        <th>Name</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($allRecords as ${{modelName}})
+                                    @forelse ($allRecords as ${{ModelName}})
                                     <tr>
                                         <td>
                                          {{ $loop->iteration + $allRecords->firstItem() - 1 }}</td>
-                                        {{TableColumns}}
+                                        <td>{{${{ModelName}}->name}}</td>
                                         <td>
-                                            {{--@statusBadge(${{modelName}}->status)--}}
-                                            <span id="status_change" data-id="{{${{modelName}}->id}}" data-name="{{modelName}}s">
-                                            @toggleStatusStatic(${{modelName}}->status)
-                                            </span>
+                                            @statusBadge(${{ModelName}}->status)
                                         </td>
                                         <td>
                                              <x-action-buttons
-                                            :canEdit="auth()->user()->hasPermission('{{modelName}}s.edit')" :canDelete="auth()->user()->hasPermission('{{modelName}}s.destroy')" :canShow="auth()->user()->hasPermission('{{modelName}}s.show')" :editRoute="route('{{modelName}}s.edit',${{modelName}})" :deleteRoute="route('{{modelName}}s.destroy',${{modelName}})" :showRoute="route('{{modelName}}s.show',${{modelName}})"
+                                            :canEdit="auth()->user()->hasPermission('{{ModelName}}s.edit')" :canDelete="auth()->user()->hasPermission('{{ModelName}}s.destroy')" :canShow="auth()->user()->hasPermission('{{ModelName}}s.show')" :editRoute="route('{{ModelName}}s.edit',${{ModelName}})" :deleteRoute="route('{{ModelName}}s.destroy',${{ModelName}})" :showRoute="route('{{ModelName}}s.show',${{ModelName}})"
                                             />
                                         </td>
                                     </tr>
@@ -81,7 +78,7 @@
                             </table>
                              <div class="row">
                                 <div class="col-md-12 text-right">
-                                {{ $allRecords->withQueryString()->links() }}
+                                {{--{{ $allRecords->withQueryString()->links() }}--}}
                                 </div>
                             </div>
                         </div>
