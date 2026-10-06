@@ -18,6 +18,7 @@ class PermissionMiddleware
         $user = auth()->user();
         // Check user active status
         if($user->active() == false){
+            return redirect()->back();
             abort(403, 'Unauthorized action. User is inactive.');
         }
         $role = $user->roles->first();

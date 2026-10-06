@@ -71,7 +71,7 @@ class MakeCrudColumns extends Command
 
         if ($this->option('migration')) {
             // Generate Migration File
-             $this->updateOrCreateMigration($modelName, $columns);
+             $this->generateMigration($modelName, $columns);
              $this->info("Successfully generated Migration File!");
         }
         if ($this->option('seeder')) {
@@ -139,135 +139,204 @@ class MakeCrudColumns extends Command
         $pairs = explode(',', $columnsArg);
 
         foreach ($pairs as $pair) {
-            [$colName, $colType] = explode(':', $pair) + [1 => 'string'];
+            $parts = explode(':', $pair);
+            $colName = trim($parts[0]);
+            $colType = isset($parts[1]) ? trim($parts[1]) : 'string';
+
+            // Check if additional parts exist (e.g., status:enum:pending,active,inactive)
+            $allowedValues = [];
+            if (strtolower($colType) === 'enum' && isset($parts[2])) {
+                $allowedValues = array_map('trim', explode('|', $parts[2])); // e.g. pending|active|inactive
+            }
+
             $parsed[] = [
-                'name' => trim($colName),
-                'type' => trim($colType),
+                'name' => $colName,
+                'type' => $colType,
+                'allowed' => $allowedValues,
             ];
         }
 
         return $parsed;
     }
     // with stub
-    public function GenerateModel($modelName){
+    protected function generateModel($modelName, array $columns)
+    {
         $modelPath = app_path("Models/{$modelName}.php");
 
         if (!File::exists(dirname($modelPath))) {
             File::makeDirectory(dirname($modelPath), 0755, true);
         }
 
+        // 1. Format the columns into a comma-separated string of quoted names (e.g., 'title', 'body', 'views')
+        $fillableColumns = collect($columns)
+            ->map(fn($column) => "'" . $column['name'] . "'")
+            ->implode(', ');
+
+        // 2. Get the stub and replace placeholders
         $stub = File::get(__DIR__ . '/stubs/model.stub');
         $stub = str_replace('{{ModelName}}', $modelName, $stub);
+        $stub = str_replace('{{FillableColumns}}', $fillableColumns, $stub);
 
+        // 3. Save the file
         File::put($modelPath, $stub);
     }
-    // without stub
-    protected function createModel($modelName, $columns)
-    {
-        $modelPath = app_path("Models/{$modelName}.php");
 
-        if (!File::exists($modelPath)) {
-            $this->warn("Model {$modelName} does not exist. Skipping fillable update.");
-            return;
-        }
-
-        $content = File::get($modelPath);
-        $columnNames = array_column($columns, 'name');
-
-        // Check if $fillable exists, otherwise inject it
-        if (str_contains($content, 'protected $fillable')) {
-            // Simple regex to append to $fillable array
-            $newFields = "'" . implode("',\n        '", $columnNames) . "',\n    ";
-            // Insert before the closing bracket of fillable
-            $content = preg_replace(
-                '/(protected\s+\$fillable\s*=\s*\[)(.*?)(\];)/s',
-                '$1$2' . $newFields . '$3',
-                $content
-            );
-        } else {
-            // Inject $fillable right after class opening
-            $fieldsString = "'" . implode("', '", $columnNames) . "'";
-            $replacement = "class {$modelName} extends Model\n{\n    protected \$fillable = [{$fieldsString}];\n";
-            $content = preg_replace('/class\s+' . $modelName . '\s+extends\s+Model\s*\{/', $replacement, $content);
-        }
-
-        File::put($modelPath, $content);
-        $this->line("<info>Updated Model:</info> {$modelName}.php");
-    }
-
-    protected function updateOrCreateMigration($modelName, $columns)
+    protected function generateMigration($modelName, array $columns)
     {
         $tableName = Str::snake(Str::plural($modelName));
-        $migrationName = "add_columns_to_{$tableName}_table";
+        $timestamp = date('Y_m_d_His');
+        $migrationFileName = "{$timestamp}_create_{$tableName}_table.php";
+        $migrationPath = database_path("migrations/{$migrationFileName}");
 
-        // Generate migration using Artisan
-        $this->call('make:migration', [
-            'name' => $migrationName,
-            '--table' => $tableName,
-        ]);
-
-        // Find the newly created migration file
-        $migrationFiles = File::glob(database_path("migrations/*_{$migrationName}.php"));
-        if (empty($migrationFiles)) return;
-
-        $migrationPath = end($migrationFiles);
-        $content = File::get($migrationPath);
-
-        $schemaLines = "";
-        foreach ($columns as $col) {
-            $schemaLines .= "            \$table->{$col['type']}('{$col['name']}');\n";
+        if (!File::exists(dirname($migrationPath))) {
+            File::makeDirectory(dirname($migrationPath), 0755, true);
         }
 
-        // Insert schema lines inside the up() method schema->table closure
-        $content = preg_replace(
-            '/(Schema::table\(\''.$tableName.'\', function \(Blueprint \$table\) \{)/',
-            "$1\n" . $schemaLines,
-            $content
-        );
+        // Build schema definition strings for each column
+        $schemaDefinitions = '';
+        // foreach ($columns as $column) {
+        //     $definition = $this->getMigrationFieldType($column['name'], $column['type']);
+        //     $schemaDefinitions .= "            {$definition}\n";
+        // }
+        //
+        foreach ($columns as $column) {
+            $definition = $this->getMigrationFieldType($column);
+            $schemaDefinitions .= "            {$definition}\n";
+        }
 
-        File::put($migrationPath, $content);
-        $this->line("<info>Created/Updated Migration:</info> " . basename($migrationPath));
+        $stub = File::get(__DIR__ . '/stubs/migration.stub');
+        $stub = str_replace('{{TableName}}', $tableName, $stub);
+        $stub = str_replace('{{SchemaDefinitions}}', trim($schemaDefinitions), $stub);
+
+        File::put($migrationPath, $stub);
     }
 
-    protected function generateRequest($modelName, $columns)
+    protected function getMigrationFieldType($column)
     {
-        $requestName = "{$modelName}Request";
-        $requestPath = app_path("Http/Requests/{$requestName}.php");
+        $name = $column['name'];
+        switch (strtolower($name)) {
+            case 'email':
+                return "\$table->string('{$name}')->unique();";
+            case 'slug':
+                return "\$table->string('{$name}')->unique();";
+        }
+        $type = strtolower($column['type']);
+        $allowed = $column['allowed'] ?? [];
 
-        if (!File::exists($requestPath)) {
-            // Create form request if it doesn't exist
-            $this->call('make:request', ['name' => $requestName]);
+        if ($type === 'enum') {
+            // Format options array to string format for php code output: ['draft', 'published', 'archived']
+            $optionsArray = "['" . implode("', '", $allowed) . "']";
+            return "\$table->enum('{$name}', {$optionsArray});";
         }
 
-        if (!File::exists($requestPath)) return;
-
-        $content = File::get($requestPath);
-
-        $rulesLines = "";
-        foreach ($columns as $col) {
-            $rule = $this->getDefaultRule($col['type']);
-            $rulesLines .= "            '{$col['name']}' => '{$rule}',\n";
-        }
-
-        // Inject rules into rules() method return array
-        $content = preg_replace(
-            '/(public function rules\(\): array\s*\{[^}]*return\s*\[)/s',
-            "$1\n" . $rulesLines,
-            $content
-        );
-
-        File::put($requestPath, $content);
-        $this->line("<info>Updated Form Request:</info> {$requestName}.php");
-    }
-
-    protected function getDefaultRule($type)
-    {
         return match ($type) {
-            'integer', 'bigInteger' => 'required|integer',
-            'text', 'mediumText', 'longText' => 'required|string|max:255',
-            'boolean' => 'required|boolean',
+            'integer' => "\$table->integer('{$name}');",
+            'mediumInteger' => "\$table->mediumInteger('{$name}');",
+            'bigInteger' => "\$table->bigInteger('{$name}');",
+            'smallInteger' => "\$table->smallInteger('{$name}');",
+            'tinyInteger' => "\$table->tinyInteger('{$name}');",
+            'decimal' => "\$table->decimal('{$name}', 8, 2);",
+            'float' => "\$table->float('{$name}');",
+            'double' => "\$table->double('{$name}');",
+            'boolean' => "\$table->boolean('{$name}');",
+            'date' => "\$table->date('{$name}');",
+            'datetime' => "\$table->dateTime('{$name}');",
+            'timestamp' => "\$table->timestamp('{$name}');",
+            'time' => "\$table->time('{$name}');",
+            'year' => "\$table->year('{$name}');",
+            'text' => "\$table->text('{$name}');",
+            'mediumText' => "\$table->mediumText('{$name}');",
+            'longText' => "\$table->longText('{$name}');",
+            'json' => "\$table->json('{$name}');",
+            'uuid' => "\$table->uuid('{$name}');",
+            default => "\$table->string('{$name}');",
+        };
+    }
+    protected function generateRequest($modelName, array $columns)
+    {
+        $requestPath = app_path("Http/Requests/{$modelName}Request.php");
+
+        if (!File::exists(dirname($requestPath))) {
+            File::makeDirectory(dirname($requestPath), 0755, true);
+        }
+
+        $rulesString = '';
+        foreach ($columns as $column) {
+            $name = $column['name'];
+            $type = $column['type'];
+
+            // Pass both name and type to get intelligent rules
+            $rule = $this->getDefaultRule($column);
+
+            $rulesString .= "            '{$name}' => '{$rule}',\n";
+        }
+
+        $stub = File::get(__DIR__ . '/stubs/request.stub');
+        $stub = str_replace('{{ModelName}}', $modelName, $stub);
+        $stub = str_replace('{{Rules}}', trim($rulesString), $stub);
+
+        File::put($requestPath, $stub);
+    }
+    protected function getDefaultRule($column)
+    {
+        $name = $column['name'];
+        $type = strtolower($column['type']);
+        $allowed = $column['allowed'] ?? [];
+
+        if ($type === 'enum' && !empty($allowed)) {
+            $allowedString = implode(',', $allowed);
+            return "required|string|in:{$allowedString}";
+        }
+       // Optional: Smart handling based on common field names regardless of type
+        switch (strtolower($name)) {
+            case 'email':
+                return 'required|string|email|max:255|unique:users,email'; // adjust table name as needed
+            case 'password':
+                return 'required|string|min:8|confirmed';
+            case 'phone':
+            case 'mobile':
+                return 'required|string|max:20';
+            case 'slug':
+                return 'required|string|max:255|alpha_dash';
+            case 'website':
+            case 'url':
+                return 'required|url|max:255';
+            case 'image':
+            case 'photo':
+            case 'avatar':
+                return 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048';
+            case 'file':
+            case 'document':
+                return 'nullable|file|mimes:pdf,doc,docx|max:5120';
+        }
+
+        // Standard mapping based on Laravel migration column types
+        return match (strtolower($type)) {
+            // Numbers
+            'integer', 'biginteger', 'mediuminteger', 'smallinteger', 'tinyinteger' => 'required|integer',
+            'unsignedinteger', 'unsignedbiginteger' => 'required|integer|min:0',
             'decimal', 'float', 'double' => 'required|numeric',
-            'date', 'dateTime', 'timestamp' => 'required|date',
+
+            // Strings & Text
+            'char', 'string' => 'required|string|max:255',
+            'text', 'mediumtext', 'longtext' => 'required|string',
+
+            // Booleans
+            'boolean' => 'required|boolean',
+
+            // Dates & Times
+            'date' => 'required|date',
+            'datetime', 'timestamp' => 'required|date_format:Y-m-d H:i:s',
+            'time' => 'required|date_format:H:i:s',
+            'year' => 'required|digits:4|integer',
+
+            // Special Data Types
+            'json', 'jsonb' => 'required|json',
+            'uuid' => 'required|uuid',
+            'ipaddress' => 'required|ip',
+            'macaddress' => 'required|mac_address',
+
+            // Fallback default
             default => 'required|string|max:255',
         };
     }

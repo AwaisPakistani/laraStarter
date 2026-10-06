@@ -6,21 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): array
     {
-        Schema::create('{{tableName}}', function (Blueprint $table) {
+        Schema::create('{{TableName}}', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->index();
-
-            $table->foreignId('created_by_id')->nullable()->constrained('users','id');
-            $table->foreignId('updated_by_id')->nullable()->constrained('users','id');
-            $table->softDeletes();
+            {{SchemaDefinitions}}
             $table->timestamps();
         });
     }
 
-    public function down()
+    public function down(): array
     {
-        Schema::dropIfExists('{{tableName}}');
+        Schema::dropIfExists('{{TableName}}');
     }
 };
