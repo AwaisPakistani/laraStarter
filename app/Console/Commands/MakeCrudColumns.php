@@ -127,12 +127,15 @@ class MakeCrudColumns extends Command
         if (!File::exists(dirname($repositoryPath))) {
             File::makeDirectory(dirname($repositoryPath), 0755, true);
         }
-
         $stub = File::get(__DIR__ . '/stubs/repository.stub');
         $stub = str_replace('{{ModelName}}', $modelName, $stub);
+        $stub = str_replace('{{Columns}}', $columns, $stub);
 
         File::put($repositoryPath, $stub);
     }
+
+
+    // done
     protected function parseColumns($columnsArg)
     {
         $parsed = [];
@@ -158,7 +161,6 @@ class MakeCrudColumns extends Command
 
         return $parsed;
     }
-    // with stub
     protected function generateModel($modelName, array $columns)
     {
         $modelPath = app_path("Models/{$modelName}.php");
