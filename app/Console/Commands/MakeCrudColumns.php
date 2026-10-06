@@ -129,7 +129,6 @@ class MakeCrudColumns extends Command
         }
         $stub = File::get(__DIR__ . '/stubs/repository.stub');
         $stub = str_replace('{{ModelName}}', $modelName, $stub);
-        $stub = str_replace('{{Columns}}', $columns, $stub);
 
         File::put($repositoryPath, $stub);
     }
