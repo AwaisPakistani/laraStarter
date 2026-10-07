@@ -46,7 +46,7 @@ class MakeCrudColumns extends Command
             $this->indexBlade($modelName, $columns);
             $this->createBlade($modelName, $columns);
             $this->updateBlade($modelName, $columns);
-            $this->generateRoutes($modelName, $columns);
+            // $this->generateRoutes($modelName, $columns);
         }
         if ($this->option('repository')) {
             // Generate Interface

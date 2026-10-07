@@ -7,4 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class {{ModelName}} extends Model
 {
     protected $fillable= [{{FillableColumns}}];
+    public function scopeSearch($query, $search)
+    {
+            return $query->whereAny(
+                ['name'],
+                'like',
+                "%{$search}%"
+            );
+    }
+    public function scopeActive($query){
+        return $query->where('status','active');
+    }
 }
