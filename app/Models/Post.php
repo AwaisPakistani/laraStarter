@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class {{ModelName}} extends Model
+class Post extends Model
 {
-    protected $fillable= [{{FillableColumns}}];
+    protected $fillable= ['title', 'description'];
     public function scopeSearch($query, $search)
     {
             return $query->whereAny(
-                [{{SearchColumns}}],
+                ['title'],
                 'like',
                 "%{$search}%"
             );

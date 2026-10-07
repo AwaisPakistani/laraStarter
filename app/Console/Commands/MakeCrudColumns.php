@@ -184,10 +184,13 @@ class MakeCrudColumns extends Command
             ->map(fn($column) => "'" . $column['name'] . "'")
             ->implode(', ');
 
+        $firstColumn = !empty($columns) ? $columns[0]['name'] : 'name';
+        $searchColumns = "'{$firstColumn}'";
         // 2. Get the stub and replace placeholders
         $stub = File::get(__DIR__ . '/stubs/model.stub');
         $stub = str_replace('{{ModelName}}', $modelName, $stub);
         $stub = str_replace('{{FillableColumns}}', $fillableColumns, $stub);
+        $stub = str_replace('{{SearchColumns}}', $searchColumns, $stub);
 
         // 3. Save the file
         File::put($modelPath, $stub);
