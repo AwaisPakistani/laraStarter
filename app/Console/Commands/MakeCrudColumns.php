@@ -46,7 +46,7 @@ class MakeCrudColumns extends Command
             $this->indexBlade($modelName, $columns);
             $this->createBlade($modelName, $columns);
             $this->updateBlade($modelName, $columns);
-            // $this->generateRoutes($modelName, $columns);
+            $this->generateRoutes($modelName, $columns);
         }
         if ($this->option('repository')) {
             // Generate Interface
@@ -547,5 +547,60 @@ class MakeCrudColumns extends Command
         $stub = str_replace('{{FormFields}}', trim($formFields), $stub);
 
         File::put($updateBladePath, $stub);
+    }
+
+    protected function generateRoutes($modelName, array $columns)
+    {
+        $routesPath = base_path('routes/web.php');
+
+        if (!File::exists($routesPath)) {
+            $this->error("routes/web.php file not found!");
+            return;
+        }
+
+        $pluralLower = strtolower(Str::plural($modelName)); // e.g., 'posts'
+        $singularLower = strtolower($modelName); // e.g., 'post'
+        $controllerName = "{$modelName}Controller";
+
+        $webContent = File::get($routesPath);
+
+        // 1. Handle Controller Use Statement Insertion
+        // Assuming your admin controllers are located in App\Http\Controllers\Admin
+        $useStatement = "use App\Http\Controllers\Admin\\{$controllerName};";
+
+        if (!str_contains($webContent, $useStatement)) {
+            // Target an existing controller import to place it right below, e.g., SaleController or ProfileController
+            $targetImport = "use App\Http\Controllers\SaleController;";
+
+            if (str_contains($webContent, $targetImport)) {
+                $webContent = str_replace($targetImport, $targetImport . "\n" . $useStatement, $webContent);
+            } else {
+                // Fallback: Just insert it near the top after the first use statement if SaleController isn't found
+                $webContent = preg_replace('/(use\s+[^;]+;)/', "$1\n" . $useStatement, $webContent, 1);
+            }
+        }
+
+        // 2. Build the route block (now using clean controller class reference since it's imported)
+        $newRouteBlock = "    // {$modelName} Routes\n";
+        $newRouteBlock .= "    Route::resource('{$pluralLower}', {$controllerName}::class);\n";
+        $newRouteBlock .= "    Route::post('{$pluralLower}/{{$singularLower}Id}/change-status', [{$controllerName}::class, 'toggleStatus'])->name('{$pluralLower}.toggleStatus');\n\n";
+
+        // 3. Check if the routes already exist to avoid duplication
+        if (str_contains($webContent, "Route::resource('{$pluralLower}'")) {
+            $this->info("Routes for {$modelName} already exist in web.php.");
+            return;
+        }
+
+        // 4. Target the marker comment block inside your permission group
+        $marker = '/////Other Routes////';
+
+        if (str_contains($webContent, $marker)) {
+            // Insert your new routes right before the marker comment block
+            $updatedContent = str_replace($marker, $newRouteBlock . "    " . $marker, $webContent);
+            File::put($routesPath, $updatedContent);
+            $this->info("Successfully added import and {$modelName} routes to routes/web.php!");
+        } else {
+            $this->error("Could not find the marker '{$marker}' in routes/web.php.");
+        }
     }
 }
