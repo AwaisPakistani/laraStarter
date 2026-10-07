@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Artisan;
 class MakeCrudColumns extends Command
 {
     protected $signature = 'make:crud-files
@@ -47,6 +47,16 @@ class MakeCrudColumns extends Command
             $this->createBlade($modelName, $columns);
             $this->updateBlade($modelName, $columns);
             $this->generateRoutes($modelName, $columns);
+
+            // 2. Run migrate:fresh --seed
+            $this->info("Running php artisan migrate:fresh --seed...");
+
+            Artisan::call('migrate:fresh', [
+                '--seed' => true,
+                '--force' => true,
+            ]);
+
+            $this->line(Artisan::output());
         }
         if ($this->option('repository')) {
             // Generate Interface
