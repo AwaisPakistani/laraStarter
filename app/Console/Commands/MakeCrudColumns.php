@@ -40,7 +40,7 @@ class MakeCrudColumns extends Command
             $this->generateRepository($modelName,$columns);
             $this->generateRequest($modelName, $columns);
             $this->GenerateModel($modelName, $columns);
-            $this->updateOrCreateMigration($modelName, $columns);
+            $this->generateMigration($modelName, $columns);
             $this->generateSeeder($modelName, $columns);
             $this->generateController($modelName, $columns);
             $this->indexBlade($modelName, $columns);
@@ -402,5 +402,147 @@ class MakeCrudColumns extends Command
         $stub = str_replace('{{TableColumns}}', trim($tableColumns), $stub);
 
         File::put($indexBladePath, $stub);
+    }
+
+    // createBlade
+    public function createBlade($modelName, array $columns)
+    {
+        $createBladePath = resource_path("views/admin/{$modelName}s/create.blade.php");
+
+        if (!File::exists(dirname($createBladePath))) {
+            File::makeDirectory(dirname($createBladePath), 0755, true);
+        }
+
+        $lowerModelName = strtolower($modelName);
+        $formFields = '';
+
+        foreach ($columns as $column) {
+            $name = $column['name'];
+            $type = strtolower($column['type']);
+            $label = Str::headline($name); // turns 'first_name' into 'First Name'
+            $allowed = $column['allowed'] ?? [];
+
+            // Determine input control type based on column specifications
+            if ($type === 'enum' && !empty($allowed)) {
+                // Generate a Select Dropdown for Enum fields
+                $options = '';
+                foreach ($allowed as $option) {
+                    $optionTitle = Str::headline($option);
+                    $options .= "<option value=\"{$option}\" {{ old('{$name}') == '{$option}' ? 'selected' : '' }}>{$optionTitle}</option>\n";
+                }
+
+                $inputControl = "
+                    <select name=\"{$name}\" id=\"{$name}-column\" class=\"form-control @error('{$name}') is-invalid @enderror\">
+                        <option value=\"\">Select {$label}</option>
+                        {$options}
+                    </select>";
+            } elseif (in_array($type, ['text', 'mediumtext', 'longtext'])) {
+                // Generate a Textarea for large text fields
+                $inputControl = "
+                    <textarea name=\"{$name}\" id=\"{$name}-column\" class=\"form-control @error('{$name}') is-invalid @enderror\" placeholder=\"{$label}\">{{ old('{$name}') }}</textarea>";
+            } else {
+                // Default input type (text, number, email, etc.)
+                $inputType = in_array($type, ['integer', 'biginteger', 'decimal', 'float', 'double']) ? 'number' : 'text';
+                if ($name === 'email') {
+                    $inputType = 'email';
+                } elseif ($name === 'password') {
+                    $inputType = 'password';
+                }
+
+                $inputControl = "
+                    <input type=\"{$inputType}\" id=\"{$name}-column\" value=\"{{ old('{$name}') }}\" class=\"form-control @error('{$name}') is-invalid @enderror\" placeholder=\"{$label}\" name=\"{$name}\">";
+            }
+
+            // Assemble the grid wrapper structure (each field inside a Bootstrap col-md-6)
+            $formFields .= "
+                <div class=\"col-md-6 col-12\">
+                    <div class=\"form-group\">
+                        <label for=\"{$name}-column\">{$label}</label>
+                        {$inputControl}
+                        @error('{$name}')
+                            <div class=\"invalid-feedback\">
+                                {{ \$message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>\n";
+        }
+
+        $stub = File::get(__DIR__ . '/stubs/createBlade.stub');
+        $stub = str_replace('{{ModelName}}', $modelName, $stub);
+        $stub = str_replace('{{modelName}}', $lowerModelName, $stub);
+        $stub = str_replace('{{FormFields}}', trim($formFields), $stub);
+
+        File::put($createBladePath, $stub);
+    }
+
+    // updateBlade
+    public function updateBlade($modelName, array $columns)
+    {
+        // Usually named edit.blade.php or update.blade.php depending on your preference
+        $updateBladePath = resource_path("views/admin/{$modelName}s/edit.blade.php");
+
+        if (!File::exists(dirname($updateBladePath))) {
+            File::makeDirectory(dirname($updateBladePath), 0755, true);
+        }
+
+        $lowerModelName = strtolower($modelName);
+        $formFields = '';
+
+        foreach ($columns as $column) {
+            $name = $column['name'];
+            $type = strtolower($column['type']);
+            $label = Str::headline($name);
+            $allowed = $column['allowed'] ?? [];
+
+            // Determine input control type based on column specifications with model value binding
+            if ($type === 'enum' && !empty($allowed)) {
+                $options = '';
+                foreach ($allowed as $option) {
+                    $optionTitle = Str::headline($option);
+                    // Bind old input or existing model attribute value
+                    $options .= "<option value=\"{$option}\" {{ (old('{$name}', \${$lowerModelName}->{$name}) == '{$option}') ? 'selected' : '' }}>{$optionTitle}</option>\n";
+                }
+
+                $inputControl = "
+                    <select name=\"{$name}\" id=\"{$name}-column\" class=\"form-control @error('{$name}') is-invalid @enderror\">
+                        <option value=\"\">Select {$label}</option>
+                        {$options}
+                    </select>";
+            } elseif (in_array($type, ['text', 'mediumtext', 'longtext'])) {
+                $inputControl = "
+                    <textarea name=\"{$name}\" id=\"{$name}-column\" class=\"form-control @error('{$name}') is-invalid @enderror\" placeholder=\"{$label}\">{{ old('{$name}', \${$lowerModelName}->{$name}) }}</textarea>";
+            } else {
+                $inputType = in_array($type, ['integer', 'biginteger', 'decimal', 'float', 'double']) ? 'number' : 'text';
+                if ($name === 'email') {
+                    $inputType = 'email';
+                } elseif ($name === 'password') {
+                    $inputType = 'password';
+                }
+
+                $inputControl = "
+                    <input type=\"{$inputType}\" id=\"{$name}-column\" value=\"{{ old('{$name}', \${$lowerModelName}->{$name}) }}\" class=\"form-control @error('{$name}') is-invalid @enderror\" placeholder=\"{$label}\" name=\"{$name}\">";
+            }
+
+            $formFields .= "
+                <div class=\"col-md-6 col-12\">
+                    <div class=\"form-group\">
+                        <label for=\"{$name}-column\">{$label}</label>
+                        {$inputControl}
+                        @error('{$name}')
+                            <div class=\"invalid-feedback\">
+                                {{ \$message }}
+                            </div>
+                        @enderror
+                    </div>
+                </div>\n";
+        }
+
+        $stub = File::get(__DIR__ . '/stubs/updateBlade.stub');
+        $stub = str_replace('{{ModelName}}', $modelName, $stub);
+        $stub = str_replace('{{modelName}}', $lowerModelName, $stub);
+        $stub = str_replace('{{FormFields}}', trim($formFields), $stub);
+
+        File::put($updateBladePath, $stub);
     }
 }
