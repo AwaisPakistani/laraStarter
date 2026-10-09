@@ -49,7 +49,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::post('permissions/{permissionId}/change-status', [PermissionController::class, 'toggleStatus'])->name('permissions.toggleStatus');
     /////////////////////
         // Post Routes
-    
+
 
     /////Other Routes////
     /////////////////////
