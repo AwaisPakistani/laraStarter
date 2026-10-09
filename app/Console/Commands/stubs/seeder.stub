@@ -4,10 +4,28 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\{{ModelName}};
+use App\Models\Permission;
 class {{ModelName}}Seeder extends Seeder
 {
     public function run()
     {
-        {{ModelName}}::factory()->count(10)->create();
+        // 1. Define CRUD permissions
+        $permissions = [
+            '{{pluralLower}}.index',
+            '{{pluralLower}}.create',
+            '{{pluralLower}}.store',
+            '{{pluralLower}}.edit',
+            '{{pluralLower}}.update',
+            '{{pluralLower}}.show',
+            '{{pluralLower}}.destroy',
+            '{{pluralLower}}.toggleStatus',
+        ];
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name'='web'
+                ]);
+        }
+        //{{ModelName}}::factory()->count(10)->create();
     }
 }

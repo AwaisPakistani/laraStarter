@@ -52,12 +52,16 @@ class MakeCrudColumns extends Command
             $this->createBlade($modelName, $columns);
             $this->updateBlade($modelName, $columns);
             $this->generateRoutes($modelName, $columns);
-
+            $this->updateDatabaseSeeder($modelName);
             // 2. Run migrate:fresh --seed
             $this->info("Running php artisan migrate:fresh --seed...");
 
-            Artisan::call('migrate:fresh', [
-                '--seed' => true,
+            // Artisan::call('migrate:fresh', [
+            //     '--seed' => true,
+            //     '--force' => true,
+            // ]);
+            Artisan::call('db:seed', [
+                '--class' => 'DatabaseSeeder',
                 '--force' => true,
             ]);
 
@@ -371,18 +375,23 @@ class MakeCrudColumns extends Command
         };
     }
 
-    public function generateSeeder($modelName)
-    {
-        $seederName = "{$modelName}Seeder";
-        $seederPath = database_path("seeders/{$seederName}.php");
 
-        $stub = File::get(__DIR__.'/stubs/seeder.stub');
+    protected function generateSeeder($modelName, $count = 21)
+    {
+        $seederPath = database_path("seeders/{$modelName}Seeder.php");
+
+        if (!File::exists(dirname($seederPath))) {
+            File::makeDirectory(dirname($seederPath), 0755, true);
+        }
+
+        $pluralLower = strtolower(Str::plural($modelName));
+
+        $stub = File::get(__DIR__ . '/stubs/seeder.stub');
         $stub = str_replace('{{ModelName}}', $modelName, $stub);
-        $stub = str_replace('{{modelName}}', strtolower($modelName), $stub);
+        $stub = str_replace('{{pluralLower}}', $pluralLower, $stub);
+        $stub = str_replace('{{Count}}', $count, $stub);
 
         File::put($seederPath, $stub);
-
-        return $seederPath;
     }
 
     // indexBlade
@@ -616,6 +625,48 @@ class MakeCrudColumns extends Command
             $this->info("Successfully added import and {$modelName} routes to routes/web.php!");
         } else {
             $this->error("Could not find the marker '{$marker}' in routes/web.php.");
+        }
+    }
+
+    protected function updateDatabaseSeeder($modelName)
+    {
+        $databaseSeederPath = database_path('seeders/DatabaseSeeder.php');
+
+        if (!File::exists($databaseSeederPath)) {
+            $this->error("DatabaseSeeder.php not found!");
+            return;
+        }
+
+        $seederClassName = "{$modelName}Seeder::class";
+        $content = File::get($databaseSeederPath);
+
+        // Check if the seeder is already present in DatabaseSeeder
+        if (str_contains($content, $seederClassName)) {
+            $this->info("{$seederClassName} is already registered in DatabaseSeeder.php.");
+            return;
+        }
+
+        // Look for the $this->call([ array block
+        if (preg_match('/\$this->call\s*\(\s*\[([^\]]*)\]\s*\);/s', $content, $matches)) {
+            $existingCalls = trim($matches[1]);
+
+            // Build the new call block
+            if (!empty($existingCalls)) {
+                // Append with a trailing comma to be safe
+                $newCalls = $existingCalls . ",\n            " . $seederClassName . ",";
+            } else {
+                $newCalls = "\n            " . $seederClassName . ",\n        ";
+            }
+
+            $updatedCallBlock = "\$this->call([\n            " . trim($newCalls) . "\n        ]);";
+
+            // Replace old block with the updated one
+            $newContent = str_replace($matches[0], $updatedCallBlock, $content);
+
+            File::put($databaseSeederPath, $newContent);
+            $this->info("Successfully registered {$seederClassName} in DatabaseSeeder.php!");
+        } else {
+            $this->error("Could not find \$this->call([...]) array in DatabaseSeeder.php.");
         }
     }
 }
