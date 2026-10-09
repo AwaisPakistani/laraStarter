@@ -56,14 +56,14 @@ class MakeCrudColumns extends Command
             // 2. Run migrate:fresh --seed
             $this->info("Running php artisan migrate:fresh --seed...");
 
-            // Artisan::call('migrate:fresh', [
-            //     '--seed' => true,
-            //     '--force' => true,
-            // ]);
-            Artisan::call('db:seed', [
-                '--class' => 'DatabaseSeeder',
+            Artisan::call('migrate:fresh', [
+                '--seed' => true,
                 '--force' => true,
             ]);
+            // Artisan::call('db:seed', [
+            //     '--class' => 'DatabaseSeeder',
+            //     '--force' => true,
+            // ]);
 
             $this->line(Artisan::output());
         }
