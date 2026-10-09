@@ -389,7 +389,7 @@ class MakeCrudColumns extends Command
         $stub = File::get(__DIR__ . '/stubs/seeder.stub');
         $stub = str_replace('{{ModelName}}', $modelName, $stub);
         $stub = str_replace('{{pluralLower}}', $pluralLower, $stub);
-        $stub = str_replace('{{Count}}', $count, $stub);
+        // $stub = str_replace('{{Count}}', $count, $stub);
 
         File::put($seederPath, $stub);
     }
