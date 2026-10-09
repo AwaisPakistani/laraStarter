@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SaleController;
-use App\Http\Controllers\admin\PostController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\admin\{UserController, RoleController, PermissionController};
 Route::get('/', function () {
@@ -50,8 +49,7 @@ Route::middleware(['auth','permission'])->group(function () {
     Route::post('permissions/{permissionId}/change-status', [PermissionController::class, 'toggleStatus'])->name('permissions.toggleStatus');
     /////////////////////
         // Post Routes
-    Route::resource('posts', PostController::class);
-    Route::post('posts/{postId}/change-status', [PostController::class, 'toggleStatus'])->name('posts.toggleStatus');
+    
 
     /////Other Routes////
     /////////////////////

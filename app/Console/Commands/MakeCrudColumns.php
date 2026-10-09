@@ -10,8 +10,8 @@ class MakeCrudColumns extends Command
 {
     // dummy Test command
     // docker compose exec app php artisan make:crud-files Post "title:string,description:longText" --all
-    
-    // permission 
+
+    // permission
     // sudo chown -R $USER:$USER /home/awais/projects/laraStarterApp
     protected $signature = 'make:crud-files
         {name : The name of the model/entity (e.g., Post)}
@@ -581,7 +581,7 @@ class MakeCrudColumns extends Command
 
         // 1. Handle Controller Use Statement Insertion
         // Assuming your admin controllers are located in App\Http\Controllers\Admin
-        $useStatement = "use App\Http\Controllers\Admin\\{$controllerName};";
+        $useStatement = "use App\Http\Controllers\admin\\{$controllerName};";
 
         if (!str_contains($webContent, $useStatement)) {
             // Target an existing controller import to place it right below, e.g., SaleController or ProfileController
