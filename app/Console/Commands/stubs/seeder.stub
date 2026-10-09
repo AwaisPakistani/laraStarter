@@ -30,7 +30,7 @@ class {{ModelName}}Seeder extends Seeder
         }
 
         // Find or create the super_admin role and assign the permissions
-        $role = Role::firstOrCreate(['email' => 'superadmin@gmail.com', 'guard_name' => 'web']);
+        $role = Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
         $role->givePermissionTo($createdPermissions);
         //{{ModelName}}::factory()->count(10)->create();
     }
