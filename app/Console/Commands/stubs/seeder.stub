@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\{{ModelName}};
-use App\Models\Permission;
+use App\Models\{Role,Permission};
 class {{ModelName}}Seeder extends Seeder
 {
     public function run()
