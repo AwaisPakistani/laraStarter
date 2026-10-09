@@ -8,6 +8,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Artisan;
 class MakeCrudColumns extends Command
 {
+    // dummy Test command
+    // docker compose exec app php artisan make:crud-files Post "title:string,description:longText" --all
+    
+    // permission 
+    // sudo chown -R $USER:$USER /home/awais/projects/laraStarterApp
     protected $signature = 'make:crud-files
         {name : The name of the model/entity (e.g., Post)}
         {columns : Columns in format name:type (e.g., title:string,body:text,views:integer)}

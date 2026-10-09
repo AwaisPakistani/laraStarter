@@ -42,7 +42,7 @@ class {{ModelName}}Controller extends Controller
         try {
             $validated = $request->validated();
             $this->{{ModelName}}interface->create($validated);
-            return redirect()->route('admin.{{modelName}}s.index')->with('success','{{modelName}} created successfully.');
+            return redirect()->route('{{modelName}}s.index')->with('success','{{modelName}} created successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -53,7 +53,7 @@ class {{ModelName}}Controller extends Controller
      */
     public function show({{ModelName}} ${{ModelName}})
     {
-        return view('admin.{{modelName}}s.show',compact('{{ModelName}}'));
+        return view('admin.{{ModelName}}s.show',compact('{{ModelName}}'));
     }
 
     /**
@@ -61,7 +61,7 @@ class {{ModelName}}Controller extends Controller
      */
     public function edit({{ModelName}} ${{ModelName}})
     {
-        return view('admin.{{modelName}}s.edit',compact('{{ModelName}}'));
+        return view('admin.{{ModelName}}s.edit',compact('{{ModelName}}'));
     }
 
     /**
@@ -72,7 +72,7 @@ class {{ModelName}}Controller extends Controller
          try {
             $validated = $request->validated();
             $this->{{ModelName}}interface->update(${{ModelName}}->id,$validated);
-            return redirect()->route('admin.{{modelName}}s.index')->with('success', '{{modelName}} updated successfully.');
+            return redirect()->route('{{modelName}}s.index')->with('success', '{{modelName}} updated successfully.');
         } catch (\Throwable $th) {
             throw $th;
         }

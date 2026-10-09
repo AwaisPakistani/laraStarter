@@ -2,14 +2,14 @@
 
 namespace App\Repositories\Files;
 
-use App\Models\{{ModelName}};
-use App\Repositories\Interfaces\{{ModelName}}RepositoryInterface;
+use App\Models\Post;
+use App\Repositories\Interfaces\PostRepositoryInterface;
 use Illuminate\Support\Facades\DB;
-class {{ModelName}}Repository implements {{ModelName}}RepositoryInterface
+class PostRepository implements PostRepositoryInterface
 {
     protected $model;
 
-    public function __construct({{ModelName}} $model)
+    public function __construct(Post $model)
     {
         $this->model = $model;
     }

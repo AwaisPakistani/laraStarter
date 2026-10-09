@@ -51,7 +51,7 @@
                                     <tr>
                                         <th>Sr#</th>
                                         <th>Title</th>
-            <th>Email</th>
+            <th>Description</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -62,7 +62,7 @@
                                         <td>
                                          {{ $loop->iteration + $allRecords->firstItem() - 1 }}</td>
                                         <td>{{ $post->title }}</td>
-            <td>{{ $post->email }}</td>
+            <td>{{ $post->description }}</td>
                                         <td>
                                             {{--@statusBadge($post->status)--}}
                                             <span id="status_change" data-id="{{$post->id}}" data-name="posts">
