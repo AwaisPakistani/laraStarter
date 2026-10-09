@@ -20,12 +20,18 @@ class {{ModelName}}Seeder extends Seeder
             '{{pluralLower}}.destroy',
             '{{pluralLower}}.toggleStatus',
         ];
+        $createdPermissions = [];
+
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate([
+            $createdPermissions[] = Permission::firstOrCreate([
                 'name' => $permission,
-                'guard_name'=>'web'
-                ]);
+                'guard_name' => 'web'
+            ]);
         }
+
+        // Find or create the super_admin role and assign the permissions
+        $role = Role::firstOrCreate(['email' => 'superadmin@gmail.com', 'guard_name' => 'web']);
+        $role->givePermissionTo($createdPermissions);
         //{{ModelName}}::factory()->count(10)->create();
     }
 }
